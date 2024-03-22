@@ -6,7 +6,7 @@
 <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.2.3</version> <!-- ou la dernière version disponible -->
+    <version>3.2.4</version> <!-- ou la dernière version disponible -->
 </parent>
 	<groupId>com.java.app.ws</groupId>
 	<artifactId>my.app.ws</artifactId>
