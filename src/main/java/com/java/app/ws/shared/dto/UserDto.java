@@ -15,7 +15,10 @@ public class UserDto implements Serializable{
 	private String password;
 	private String encryptedPassword;
 	private String emailverificationToken;
+	private String telephone;
+	private String role;
 	private Boolean emailverificationStatus = false;
+	
 	public long getId() {
 		return Id;
 	}
@@ -73,6 +76,18 @@ public class UserDto implements Serializable{
 	}
 	public void setEmailverificationStatus(Boolean emailverificationStatus) {
 		this.emailverificationStatus = emailverificationStatus;
+	}
+	public String getTelephone() {
+		return telephone;
+	}
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 }

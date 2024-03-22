@@ -33,8 +33,10 @@ public class UserEntity implements Serializable{
 	private String emailverificationToken;
 	@Column( nullable=false)
 	private Boolean emailverificationStatus=false;
-	
-	
+	private String telephone;
+	 @Column(nullable=false)
+	private String role;
+	 @Column(nullable=false)
 	public long getId() {
 		return Id;
 	}
@@ -82,6 +84,18 @@ public class UserEntity implements Serializable{
 	}
 	public void setEmailverificationStatus(Boolean emailverificationStatus) {
 		this.emailverificationStatus = emailverificationStatus;
+	}
+	public String getTelephone() {
+		return telephone;
+	}
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 

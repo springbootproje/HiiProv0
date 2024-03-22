@@ -4,6 +4,8 @@ public class UserRequest {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private String telephone;
+	private String role;
 	private String password;
 	
 	
@@ -36,6 +38,22 @@ public class UserRequest {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 	 
 	
