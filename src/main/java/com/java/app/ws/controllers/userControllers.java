@@ -26,7 +26,7 @@ public class userControllers {
 	public  String GetUser() {
 		return "get user was called";
 		
-	}
+	}//
 	
 	@PostMapping
 	public  UserResponses createUser(@RequestBody UserRequest userRequest) {
