@@ -1,4 +1,4 @@
-package com.java.app.ws;
+package com.java.app.ws.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

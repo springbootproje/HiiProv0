@@ -16,3 +16,13 @@ public BCryptPasswordEncoder bCryptPasswordEncoder() {
 	return  new BCryptPasswordEncoder();
 }
 }
+
+
+
+localhost:8080/project_manager/
+
+
+
+
+/prpject/delete/450 => supprimer
+/projet/show/450 => afficher les détails du projet dont l'id est 450

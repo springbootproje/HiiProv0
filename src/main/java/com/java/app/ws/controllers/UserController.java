@@ -19,7 +19,7 @@ import com.java.app.ws.shared.dto.UserDto;
 
 @RestController
 @RequestMapping("/users")
-public class userControllers {
+public class UserController {
 	@Autowired
 	UserService userService;
 	@GetMapping

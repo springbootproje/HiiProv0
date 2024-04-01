@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.java.app.ws.UserRepositery;
+import com.java.app.ws.repository.UserRepositery;
 import com.java.app.ws.entity.UserEntity;
 import com.java.app.ws.services.UserService;
 
