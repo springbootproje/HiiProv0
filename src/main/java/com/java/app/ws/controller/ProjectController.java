@@ -2,16 +2,60 @@ package com.java.app.ws.controller;
 
 
 import com.java.app.ws.Repository.ProjectRepository;
+import com.java.app.ws.Repository.UserRepository;
+import com.java.app.ws.request.Project;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 @RestController
-@RequestMapping("project")
+
 public class ProjectController {
 
 
-    @GetMapping("/students")
-    public List<Project> getAllStudents() {
-        return ProjectRepository.findAll();
+
+
+    private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
+
+
+    public ProjectController(ProjectRepository projectRepository, UserRepository userRepository) {
+        this.projectRepository = projectRepository;
+        this.userRepository = userRepository;
+    }
+
+
+
+    @RequestMapping("project")
+    @GetMapping("/listProjects")
+    public List<Project> getAllProjects() {
+        return projectRepository.findAll(); //list of all projects
+    }
+    @GetMapping(path = "/projectUser")
+    public Optional<Project> getProjectByUser(@RequestParam("id") int id){
+            return projectRepository.findById(id); //find all PROJECT by a specefic user id
+
+        }
+    @GetMapping(path = "/project/{id}") //trouver un projet
+        public Project getProjecttById(@PathVariable("id_p") int id_p){
+            return projectRepository.findById( id_p).orElseThrow(() -> new NoSuchElementException("Project with id " + id_p + " not found")); //get project by it id
+        }
+
+
+
+    @GetMapping(path = "/listProjet{id}") //liste de projet d'un user
+    public List<Project> getProjectrByUser(@RequestParam("id") int id) {
+        return projectRepository.findById(id); //user id in a project id_p
+        //product in events eventId
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ErrorResponse notFound(NoSuchElementException ex){
+        return ErrorResponse.create(ex, HttpStatus.NOT_FOUND, ex.getMessage()); //if there no project wit this id
     }
 
     @PostMapping("/addProject")

@@ -34,20 +34,14 @@ public class UserEntity implements Serializable{
 	@Column(nullable=false,length=100,unique=true)
 	private String email;
 
+	@Column(nullable=false)
+	private String role;
 
-	//@Column(nullable=false)
-	//private String encryptedPassword;
-
-
-	//@Column(nullable=true)
-	//private String emailverificationToken;
-
-
-	//@Column( nullable=false)
-	//private Boolean emailverificationStatus=false;
+	@Column(nullable=false, unique=true)
+	private String telephone;
 
 	@Column(nullable=false)
-	private String telephone;
+	private String password;
 
 	public String getFirstName() {
 		return firstName;
@@ -55,6 +49,14 @@ public class UserEntity implements Serializable{
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getRole() {
@@ -101,71 +103,8 @@ public class UserEntity implements Serializable{
 		Id = id;
 	}
 
-	@Column(nullable=false)
-	private String role;
 
 
-	/*public long getId() {
-		return Id;
-	}
-	public void setId(long id) {
-		Id = id;
-	}
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFisrtName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getEncryptedPassword() {
-		return encryptedPassword;
-	}
-	public void setEncryptedPassword(String encryptedPassword) {
-		this.encryptedPassword = encryptedPassword;
-	}
-	public String getEmailverificationToken() {
-		return emailverificationToken;
-	}
-	public void setEmailverificationToken(String emailverificationToken) {
-		this.emailverificationToken = emailverificationToken;
-	}
-	public Boolean getEmailverificationStatus() {
-		return emailverificationStatus;
-	}
-	public void setEmailverificationStatus(Boolean emailverificationStatus) {
-		this.emailverificationStatus = emailverificationStatus;
-	}
-	public String getTelephone() {
-		return telephone;
-	}
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
-	public String getRole() {
-		return role;
-	}
-	public void setRole(String role) {
-		this.role = role;
-	}
-	
-*/
+
 }
  
