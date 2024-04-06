@@ -12,12 +12,14 @@ public class UserDto implements Serializable{
 	private String firstName;
 	private String lastName;
 	private String email;
+
 	private String password;
-	private String encryptedPassword;
-	private String emailverificationToken;
+	//private String encryptedPassword;
+	//private String emailverificationToken;
 	private String telephone;
 	private String role;
-	private Boolean emailverificationStatus = false;
+
+	//private Boolean emailverificationStatus = false;
 	
 	public long getId() {
 		return Id;
@@ -59,29 +61,11 @@ public class UserDto implements Serializable{
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getEncryptedPassword() {
-		return encryptedPassword;
+
+
+	public String getTelephone() {return telephone;
 	}
-	public void setEncryptedPassword(String encryptedPassword) {
-		this.encryptedPassword = encryptedPassword;
-	}
-	public String getEmailverificationToken() {
-		return emailverificationToken;
-	}
-	public void setEmailverificationToken(String emailverificationToken) {
-		this.emailverificationToken = emailverificationToken;
-	}
-	public Boolean getEmailverificationStatus() {
-		return emailverificationStatus;
-	}
-	public void setEmailverificationStatus(Boolean emailverificationStatus) {
-		this.emailverificationStatus = emailverificationStatus;
-	}
-	public String getTelephone() {
-		return telephone;
-	}
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
+	public void setTelephone(String telephone) {this.telephone = telephone;
 	}
 	public String getRole() {
 		return role;
@@ -89,5 +73,11 @@ public class UserDto implements Serializable{
 	public void setRole(String role) {
 		this.role = role;
 	}
+
+	}
+
+
+
+
 	
-}
+

@@ -1,4 +1,4 @@
-package com.java.app.ws.security;
+package com.java.app.ws.Security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

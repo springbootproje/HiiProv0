@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.java.app.ws.UserRepositery;
 import com.java.app.ws.entity.UserEntity;
-import com.java.app.ws.services.UserService;
+import com.java.app.ws.Service.UserService;
 
 import com.java.app.ws.shared.dto.UserDto;
 
@@ -35,8 +35,7 @@ public class UserServiceImpl implements UserService {
 		BeanUtils.copyProperties(user,userEntity);
 		
 		
-		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		userEntity.setUserId("user test id");
+
 	
 		
 		UserEntity newUser = userRepository.save(userEntity);
