@@ -1,14 +1,12 @@
 package com.java.app.ws.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.security.Timestamp;
+import java.time.LocalDate;
 
 @Entity(name="project")
 public class ProjectEntity implements Serializable  {
@@ -25,8 +23,16 @@ public class ProjectEntity implements Serializable  {
     private String description;
 
 
-    @Column(nullable=false,length=50)
-    private Timestamp create_date;
+    @Column(name = "create_date")
+    private LocalDate createDate;
+
+    public LocalDate getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
+    }
 
     public int getId_p() {
         return id_p;
@@ -44,13 +50,7 @@ public class ProjectEntity implements Serializable  {
         this.description = description;
     }
 
-    public Timestamp getCreate_date() {
-        return create_date;
-    }
 
-    public void setCreate_date(Timestamp create_date) {
-        this.create_date = create_date;
-    }
 
     public String getProject_title() {
         return project_title;
@@ -60,19 +60,21 @@ public class ProjectEntity implements Serializable  {
         this.project_title = project_title;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     @Column(nullable=false,length=50)
     private String project_title;
 
-    @Column(nullable=false)
-    private int id;
+    @ManyToOne
+    @JoinColumn(name = "id") // This should match the foreign key column in your database.
+    private UserEntity user;
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
     @Id
     private Long idp;
 

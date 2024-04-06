@@ -2,18 +2,18 @@ package com.java.app.ws.controller;
 
 import com.java.app.ws.Repository.ProjectRepository;
 import com.java.app.ws.Repository.UserRepository;
-import com.java.app.ws.request.Project;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.ErrorResponse;
+
+import com.java.app.ws.Service.ProjectService;
+import com.java.app.ws.Service.UserService;
+import com.java.app.ws.entity.UserEntity;
+
+import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
-import com.java.app.ws.request.User;
-import com.java.app.ws.responses.UserResponses;
-import com.java.app.ws.services.UserService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+
 
 
 @RestController
@@ -26,49 +26,81 @@ public class UserController {
 	private final ProjectRepository projectRepository;
 	private final UserRepository userRepository;
 
+	private final UserService userService;
+	private final ProjectService projectService;
 
-	public UserController(ProjectRepository projectRepository, UserRepository userRepository) {
+	public UserController(ProjectRepository projectRepository, UserRepository userRepository, UserService userService, ProjectService projectService) {
 		this.projectRepository = projectRepository;
 		this.userRepository = userRepository;
-	}
-
-
-
-
+		this.userService =userService;
+        this.projectService = projectService;
+    }
 	@RequestMapping("/users")
-	@GetMapping("/listUsers")
-	public List<User> getAllUsers() {
-		return userRepository.findAll(); //list of all uers
+	@PostMapping(path="/create-user")
+	public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity user) {
+		UserEntity newUser = userService.createUser(user);
+		return ResponseEntity.ok(newUser);
 	}
 
-	@GetMapping(path = "/project/{id}") //get info of a user /finduser
-	public Project getUserById(@PathVariable("id") int id){
-		return userRepository.findById(id)
-				.orElseThrow(() -> new NoSuchElementException("Project with id " + id + " not found"));
-	}
-	@ExceptionHandler(NoSuchElementException.class)
-	public ErrorResponse notFound(NoSuchElementException ex){
-		return ErrorResponse.create(ex, HttpStatus.NOT_FOUND, ex.getMessage()); //if there no user wit this id
+	@GetMapping(path="/allUser")
+	public ResponseEntity<List<UserEntity>> getAllUsers() {
+		List<UserEntity> users = userService.getAllUsers();
+		return ResponseEntity.ok(users);
 	}
 
-	@GetMapping(path = "/userProject")//list user dans un porjet
-	public List<User> getUserByProject(@RequestParam("id_p") int id_p) {
-		return userRepository.findById_p(id_p); //user id in a project id_p
-		//product in events eventId
-	}
-	@PostMapping
-	public  UserResponses createUser(@RequestBody User user) {
-
-	}
-	@PutMapping("/users")
-	public void updateUser(@PathVariable("id") int id, @RequestParam("userNamefirstName") String firstName) {
-		// inside this method we have to update the user record
+	@GetMapping("/user{id}")
+	public ResponseEntity<UserEntity> getUserById(@PathVariable Long id) {
+		UserEntity user = userService.getUserById(id);
+		return ResponseEntity.ok(user);
 	}
 
-	@DeleteMapping("/users/{id}")
-	public void deleteUser(@PathVariable("id") int id) {
-		// Delete the user in this method with the id.
+	@PutMapping("/update{id}")
+	public ResponseEntity<UserEntity> updateUser(@PathVariable Long id, @RequestBody UserEntity userDetails) {
+		// Assume the incoming userDetails object does not contain password information
+		UserEntity updatedUser = userService.updateUser(id, userDetails);
+		return ResponseEntity.ok(updatedUser);
 	}
+
+	@PostMapping("/{id}/change-password")
+	public ResponseEntity<?> changePassword(@PathVariable Long id,
+											@RequestParam String currentPassword,
+											@RequestParam String newPassword) {
+		// Ensure this endpoint is secure and accessible only by the user whose ID is specified
+		boolean success = userService.updatePassword(id, currentPassword, newPassword);
+		if (success) {
+			return ResponseEntity.ok().build();
+		} else {
+			// Handle failure scenario, possibly returning a different status or error message
+			return ResponseEntity.badRequest().body("Password update failed");
+		}
+	}
+
+
+	@DeleteMapping("/delete{id}")
+	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+		userService.deleteUser(id);
+		return ResponseEntity.ok().build();
+	}
+
+
+	@GetMapping("/email/{email}")
+	public ResponseEntity<UserEntity> getUserByEmail(@PathVariable String email) {
+		UserEntity user = userService.getUserByEmail(email);
+		return ResponseEntity.ok(user);
+	}
+
+	@GetMapping("/{projectId}/user")
+	public ResponseEntity<UserEntity> getUserByProject(@PathVariable Long projectId) {
+		UserEntity user = projectService.getUserByProject(projectId);
+		return ResponseEntity.ok(user);
+	}
+
+
+
+
+
+
+
 	}
 	
 	

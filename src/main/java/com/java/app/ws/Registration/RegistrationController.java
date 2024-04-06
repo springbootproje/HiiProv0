@@ -1,5 +1,6 @@
 package com.java.app.ws.Registration;
 
+import com.java.app.ws.entity.UserEntity;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

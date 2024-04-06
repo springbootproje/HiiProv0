@@ -1,4 +1,4 @@
-package com.java.app.ws.request;
+package com.java.app.ws.Request;
 
 public class UserLoginRequest {
 private String email;
