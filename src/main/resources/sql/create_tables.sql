@@ -4,6 +4,7 @@ CREATE TABLE user (
       lastname varchar(255),
       email varchar(255),
       password varchar(255),
+      create_date timestamp,
       PRIMARY KEY (ID)
 );
 CREATE TABLE project (
