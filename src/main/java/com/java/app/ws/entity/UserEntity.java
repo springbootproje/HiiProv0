@@ -1,26 +1,23 @@
  package com.java.app.ws.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.*;
 
 
-
-@Entity(name="user") //lier a table user
+ @Entity(name="user") //lier a table user
 public class UserEntity implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2565811476026900613L;
-   @jakarta.persistence.Id
-   @GeneratedValue
-	
-	private long Id;
+    @jakarta.persistence.Id
+    @GeneratedValue
     @Column(nullable=false)
-	private int id;
+	private long id;
 
 
 	@Column(nullable=false,length=50)
@@ -42,6 +39,21 @@ public class UserEntity implements Serializable{
 
 	@Column(nullable=false)
 	private String password;
+
+	 public LocalDate getCreateDate() {
+		 return createDate;
+	 }
+
+	 public void setCreateDate(LocalDate createDate) {
+		 this.createDate = createDate;
+	 }
+
+	 @Column(name = "create_date", nullable = false)
+	 private LocalDate createDate;
+
+//	@OneToMany
+//	private List<ProjectEntity> projects;
+
 
 	public String getFirstName() {
 		return firstName;
@@ -67,7 +79,7 @@ public class UserEntity implements Serializable{
 		this.role = role;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -95,16 +107,9 @@ public class UserEntity implements Serializable{
 		this.lastName = lastName;
 	}
 
+
 	public long getId() {
-		return Id;
+		return id;
 	}
-
-	public void setId(long id) {
-		Id = id;
-	}
-
-
-
-
 }
  
