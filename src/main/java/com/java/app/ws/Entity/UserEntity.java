@@ -1,4 +1,4 @@
- package com.java.app.ws.entity;
+ package com.java.app.ws.Entity;
 
 import java.io.Serializable;
 
@@ -18,9 +18,9 @@ public class UserEntity implements Serializable{
    @jakarta.persistence.Id
    @GeneratedValue
 	
-	private long Id;
+
     @Column(nullable=false)
-	private int id;
+	private long id;
 
 
 	@Column(nullable=false,length=50)
@@ -67,7 +67,7 @@ public class UserEntity implements Serializable{
 		this.role = role;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -95,13 +95,7 @@ public class UserEntity implements Serializable{
 		this.lastName = lastName;
 	}
 
-	public long getId() {
-		return Id;
-	}
 
-	public void setId(long id) {
-		Id = id;
-	}
 
 
 

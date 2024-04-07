@@ -2,8 +2,8 @@ package com.java.app.ws.Service;
 
 import com.java.app.ws.Repository.ProjectRepository;
 import com.java.app.ws.Repository.UserRepository;
-import com.java.app.ws.entity.ProjectEntity;
-import com.java.app.ws.entity.UserEntity;
+import com.java.app.ws.Entity.ProjectEntity;
+import com.java.app.ws.Entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +28,9 @@ public class ProjectService {
 
     public ProjectEntity createProject(ProjectEntity projectEntity) {
         // Check if the creation date is not set
-        if (projectEntity.getCreateDate() == null) {
+        if (projectEntity.getCreate_date() == null) {
             // Set the creation date to the current date
-            projectEntity.setCreateDate(LocalDate.now());
+            projectEntity.setCreate_date(LocalDate.now());
         }
         return projectRepository.save(projectEntity);
     }
@@ -49,14 +49,14 @@ public class ProjectService {
 
     public ProjectEntity updateProject(Long id, ProjectEntity projectDetails) {
         //  existing project and update its details
-        ProjectEntity project = projectRepository.findById(id)
+        ProjectEntity projectEntity = projectRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Project not found with id: " + id));
 
-        project.setProject_title(projectDetails.getProject_title());
-        project.setDescription(projectDetails.getDescription());
+        projectEntity.setProject_title(projectDetails.getProject_title());
+        projectEntity.setDescription(projectDetails.getDescription());
         // Optionally allow updating the creation date or other fields
 
-        return projectRepository.save(project);
+        return projectRepository.save(projectEntity);
     }
 
 
@@ -69,7 +69,7 @@ public class ProjectService {
 
     public List<ProjectEntity> searchByTitle(String title) {
         // Search project par titre
-        return projectRepository.findByProjectTitleContaining(title);
+        return projectRepository.findByProject_titleContaining(title);
     }
 
     public List<ProjectEntity> findAllProjectsByUserId(Long userId) {
@@ -89,51 +89,51 @@ public class ProjectService {
     }
 
     public ProjectEntity updateProjectDetails(Long projectId, ProjectEntity projectDetails, Long userId) {
-        ProjectEntity project = projectRepository.findByIdAndUserId(projectId, userId)
+        ProjectEntity projectEntity = projectRepository.findByIdAndUserId(projectId, userId)
                 .orElseThrow(() -> new RuntimeException("Project not found or not owned by user"));
 
 
-        project.setProject_title(projectDetails.getProject_title());
-        project.setDescription(projectDetails.getDescription());
-        project.setCreateDate(projectDetails.getCreateDate());
+        projectEntity.setProject_title(projectDetails.getProject_title());
+        projectEntity.setDescription(projectDetails.getDescription());
+        projectEntity.setCreate_date(projectDetails.getCreate_date());
 
 
-        return projectRepository.save(project);
+        return projectRepository.save(projectEntity);
     }
 
     public List<ProjectEntity> findByCreationDateRange(LocalDate start, LocalDate end) {
-        return projectRepository.findByCreateDateBetween(start, end);
+        return projectRepository.findByCreate_dateBetween(start, end);
     }
 
     public void removeProjectFromUser(Long id_p, Long id) {
-        ProjectEntity project = projectRepository.findByIdAndUserId(id_p, id)
+        ProjectEntity projectEntity = projectRepository.findByIdAndUserId(id_p, id)
                 .orElseThrow(() -> new RuntimeException("Project not found or not owned by the user"));
-        projectRepository.delete(project);
+        projectRepository.delete(projectEntity);
     }
 
     public ProjectEntity transferProjectToAnotherUser(Long id_p, Long newOwnerId) {
-        ProjectEntity project = projectRepository.findById(id_p)
+        ProjectEntity projectEntity = projectRepository.findById(id_p)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
         UserEntity newOwner = userRepository.findById(newOwnerId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        project.setUser(newOwner);
-        return projectRepository.save(project);
+        projectEntity.setUser(newOwner);
+        return projectRepository.save(projectEntity);
     }
 
 
     public List<ProjectEntity> searchProjects(String keyword) {
-        return projectRepository.findByProjectTitleContainingOrDescriptionContaining(keyword, keyword);
+        return projectRepository.findByProject_titleContainingOrDescriptionContaining(keyword, keyword);
     }
     public List<ProjectEntity> getProjectsByDateRange(LocalDate start, LocalDate end) {
-        return projectRepository.findByCreateDateBetween(start, end);
+        return projectRepository.findByCreate_dateBetween(start, end);
     }
-    public UserEntity getUserByProject(Long projectId) {
+    public UserEntity getUserByProject(Long id_p) {
 
-        ProjectEntity project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("Project not found with id: " + projectId));
+        ProjectEntity projectEntity = projectRepository.findById(id_p)
+                .orElseThrow(() -> new RuntimeException("Project not found with id: " + id_p));
 
 
-        return project.getUser();
+        return projectEntity.getUser();
     }
 
 

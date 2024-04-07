@@ -1,6 +1,6 @@
 package com.java.app.ws.Repository;
 
-import com.java.app.ws.entity.ProjectEntity;
+import com.java.app.ws.Entity.ProjectEntity;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,14 +13,15 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
-    List<ProjectEntity> findByProjectTitleContaining(String title);
-    List<ProjectEntity> findByDateCreateBetween(LocalDate start, LocalDate end);
-    List<ProjectEntity> findByCreateDateBetween(LocalDate startDate, LocalDate endDate);
+    List<ProjectEntity> findByProject_titleContaining(String project_title);
+    List<ProjectEntity> findByCreate_dateBetween(LocalDate start, LocalDate end);
 
-    List<ProjectEntity> findByUserId(Long userId);
 
-    Optional<ProjectEntity> findByIdAndUserId(Long projectId, Long userId);
-    List<ProjectEntity> findByProjectTitleContainingOrDescriptionContaining(String title, String description);
+    List<ProjectEntity> findByUserId(Long id);
+
+
+    Optional<ProjectEntity> findByIdAndUserId(Long ip_p, Long id);
+    List<ProjectEntity> findByProject_titleContainingOrDescriptionContaining(String title, String description);
     Optional<ProjectEntity> findById(Long id);
 
 }

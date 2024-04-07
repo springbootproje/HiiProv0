@@ -1,21 +1,18 @@
-package com.java.app.ws.controller;
+package com.java.app.ws.Controller;
 
 
 import com.java.app.ws.Repository.ProjectRepository;
 import com.java.app.ws.Repository.UserRepository;
 
 import com.java.app.ws.Service.ProjectService;
-import com.java.app.ws.entity.ProjectEntity;
+import com.java.app.ws.Entity.ProjectEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -50,22 +47,22 @@ public class ProjectController {
         return ResponseEntity.ok(projects); //done
     }
     @GetMapping(path = "/projectUser")
-    public Optional<ProjectEntity> getProjectByUser(@RequestParam("id") int id){
+    public Optional<ProjectEntity> getProjectByUser(@RequestParam("id") Long id){
             return projectRepository.findById(id); //find all PROJECT by a specefic user id
 
         }
     @GetMapping("/{idP}") // List project by its ID
     public ResponseEntity<ProjectEntity> getProjectById(@PathVariable("idP") Long idP) {
-        ProjectEntity project = projectService.getProjectById(idP);
-        return ResponseEntity.ok(project);
+        ProjectEntity projectEntity = projectService.getProjectById(idP);
+        return ResponseEntity.ok(projectEntity);
     }//done
 
 
 
 
     @GetMapping(path = "/listProjet{id}") //liste de projet d'un user
-    public List<ProjectEntity> getProjectrByUser(@RequestParam("id") int id) {
-        return projectRepository.findById(id); //user id in a project id_p
+    public List<ProjectEntity> getProjectrByUser(@PathVariable("id") Long id) {
+        return projectRepository.findByUserId(id); //user id in a project id_p
         //product in events eventId
     }
 

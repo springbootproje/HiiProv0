@@ -1,11 +1,10 @@
-package com.java.app.ws.entity;
+package com.java.app.ws.Entity;
 
 import jakarta.persistence.*;
 
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.security.Timestamp;
 import java.time.LocalDate;
 
 @Entity(name="project")
@@ -13,34 +12,29 @@ public class ProjectEntity implements Serializable  {
 
     @Serial
     private static final long serialVersionUID= 738341912492712033L;
-    @jakarta.persistence.Id
-    @GeneratedValue
-    @Column(nullable=false)
-    private int id_p;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable=false, updatable = false)
+    private Long id_p;
 
 
     @Column(nullable=false,length=250)
     private String description;
 
 
-    @Column(name = "create_date")
-    private LocalDate createDate;
+    @Column(name = "create_date", nullable = false)
+    private LocalDate create_date;
 
-    public LocalDate getCreateDate() {
-        return createDate;
+    public LocalDate getCreate_date() {
+        return create_date;
     }
 
-    public void setCreateDate(LocalDate createDate) {
-        this.createDate = createDate;
+    public void setCreate_date(LocalDate create_date) {
+        this.create_date = create_date;
     }
 
-    public int getId_p() {
-        return id_p;
-    }
 
-    public void setId_p(int id_p) {
-        this.id_p = id_p;
-    }
 
     public String getDescription() {
         return description;
@@ -65,8 +59,16 @@ public class ProjectEntity implements Serializable  {
     @Column(nullable=false,length=50)
     private String project_title;
 
+    public Long getId_p() {
+        return id_p;
+    }
+
+    public void setId_p(Long id_p) {
+        this.id_p = id_p;
+    }
+
     @ManyToOne
-    @JoinColumn(name = "id") // This should match the foreign key column in your database.
+    @JoinColumn(name = "id")
     private UserEntity user;
     public UserEntity getUser() {
         return user;
@@ -75,14 +77,5 @@ public class ProjectEntity implements Serializable  {
     public void setUser(UserEntity user) {
         this.user = user;
     }
-    @Id
-    private Long idp;
 
-    public void setIdp(Long idp) {
-        this.idp = idp;
-    }
-
-    public Long getIdp() {
-        return idp;
-    }
 }
