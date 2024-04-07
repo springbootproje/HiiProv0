@@ -1,44 +1,29 @@
- package com.java.app.ws.Entity;
+ package com.java.app.ws.dto;
 
-import java.io.Serializable;
+ import jakarta.persistence.Column;
+ import jakarta.persistence.Entity;
+ import jakarta.persistence.GeneratedValue;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-
-
-
-@Entity(name="user") //lier a table user
-public class UserEntity implements Serializable{
+ import java.io.Serializable;
+public class UserDto implements Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2565811476026900613L;
-    @jakarta.persistence.Id
-    @GeneratedValue
-    @Column(nullable=false)
+
 	private long id;
 
-
-	@Column(nullable=false,length=50)
 	private String firstName;
 
-
-	@Column(nullable=false,length=50)
 	private String lastName;
 
-
-	@Column(nullable=false,length=100,unique=true)
 	private String email;
 
-	@Column(nullable=false)
 	private String role;
 
-	@Column(nullable=false, unique=true)
 	private String telephone;
 
-	@Column(nullable=false)
 	private String password;
 
 	public String getFirstName() {
@@ -94,8 +79,9 @@ public class UserEntity implements Serializable{
 	}
 
 
-	public long getId() {
-		return id;
-	}
+
+
+
+
 }
  

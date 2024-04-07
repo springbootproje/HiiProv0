@@ -1,5 +1,6 @@
 package com.java.app.ws.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 
@@ -16,7 +17,7 @@ public class ProjectEntity implements Serializable  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable=false, updatable = false)
-    private Long id_p;
+    private Long id;
 
 
     @Column(nullable=false,length=250)
@@ -24,17 +25,24 @@ public class ProjectEntity implements Serializable  {
 
 
     @Column(name = "create_date", nullable = false)
-    private LocalDate create_date;
+    private LocalDate createDate;
 
-    public LocalDate getCreate_date() {
-        return create_date;
+
+    @Column(nullable=false,length=50)
+    private String title;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private UserEntity user;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setCreate_date(LocalDate create_date) {
-        this.create_date = create_date;
+    public void setId(Long id) {
+        this.id = id;
     }
-
-
 
     public String getDescription() {
         return description;
@@ -44,32 +52,22 @@ public class ProjectEntity implements Serializable  {
         this.description = description;
     }
 
-
-
-    public String getProject_title() {
-        return project_title;
+    public LocalDate getCreateDate() {
+        return createDate;
     }
 
-    public void setProject_title(String project_title) {
-        this.project_title = project_title;
+    public void setCreateDate(LocalDate createDate) {
+        this.createDate = createDate;
     }
 
-
-
-    @Column(nullable=false,length=50)
-    private String project_title;
-
-    public Long getId_p() {
-        return id_p;
+    public String getTitle() {
+        return title;
     }
 
-    public void setId_p(Long id_p) {
-        this.id_p = id_p;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "id")
-    private UserEntity user;
     public UserEntity getUser() {
         return user;
     }
@@ -77,5 +75,4 @@ public class ProjectEntity implements Serializable  {
     public void setUser(UserEntity user) {
         this.user = user;
     }
-
 }

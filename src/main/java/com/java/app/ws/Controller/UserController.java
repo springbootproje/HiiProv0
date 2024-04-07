@@ -17,26 +17,21 @@ import java.util.List;
 
 
 @RestController
-
+@RequestMapping("/users")
 public class UserController {
 	/*@Autowired
 	UserService userService;*/
 
 
-	private final ProjectRepository projectRepository;
-	private final UserRepository userRepository;
-
 	private final UserService userService;
 	private final ProjectService projectService;
 
-	public UserController(ProjectRepository projectRepository, UserRepository userRepository, UserService userService, ProjectService projectService) {
-		this.projectRepository = projectRepository;
-		this.userRepository = userRepository;
+	public UserController(UserService userService, ProjectService projectService) {
 		this.userService =userService;
         this.projectService = projectService;
     }
-	@RequestMapping("/users")
-	@PostMapping(path="/create-user")
+
+	@PostMapping(path="/new")
 	public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity user) {
 		UserEntity newUser = userService.createUser(user);
 		return ResponseEntity.ok(newUser);

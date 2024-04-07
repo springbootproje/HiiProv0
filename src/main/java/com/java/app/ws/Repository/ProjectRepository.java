@@ -13,15 +13,15 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
-    List<ProjectEntity> findByProject_titleContaining(String project_title);
-    List<ProjectEntity> findByCreate_dateBetween(LocalDate start, LocalDate end);
+    List<ProjectEntity> findByTitleContaining(String project_title);
+    List<ProjectEntity> findByCreateDateBetween(LocalDate start, LocalDate end);
 
 
     List<ProjectEntity> findByUserId(Long id);
 
 
     Optional<ProjectEntity> findByIdAndUserId(Long ip_p, Long id);
-    List<ProjectEntity> findByProject_titleContainingOrDescriptionContaining(String title, String description);
+    List<ProjectEntity> findByTitleContainingOrDescriptionContaining(String title, String description);
     Optional<ProjectEntity> findById(Long id);
 
 }

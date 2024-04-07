@@ -2,10 +2,10 @@ package com.java.app.ws.Controller;
 
 
 import com.java.app.ws.Repository.ProjectRepository;
-import com.java.app.ws.Repository.UserRepository;
 
 import com.java.app.ws.Service.ProjectService;
 import com.java.app.ws.Entity.ProjectEntity;
+import com.java.app.ws.dto.ProjectDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -13,82 +13,70 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-
+@RequestMapping("/project")
 public class ProjectController {
 
 
-
-
     private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
-
-
     private final ProjectService projectService;
 
-@Autowired
-    public ProjectController(ProjectRepository projectRepository, UserRepository userRepository, ProjectService projectService) {
+    @Autowired
+    public ProjectController(ProjectRepository projectRepository, ProjectService projectService) {
         this.projectRepository = projectRepository;
-        this.userRepository = userRepository;
         this.projectService = projectService;
     }
 
 
-
-    @RequestMapping("/project")
-
-
-
-    @GetMapping("/listProjects")
+    @GetMapping("/list")
     public ResponseEntity<List<ProjectEntity>> getAllProjects() {
         List<ProjectEntity> projects = projectService.getAllProjects();
         return ResponseEntity.ok(projects); //done
     }
-    @GetMapping(path = "/projectUser")
-    public Optional<ProjectEntity> getProjectByUser(@RequestParam("id") Long id){
-            return projectRepository.findById(id); //find all PROJECT by a specefic user id
+    @GetMapping(path = "/user_projects/{user_id}")
+    public List<ProjectEntity> getProjectByUser(@PathVariable("user_id") Long userId){
+            return projectService.findAllProjectsByUserId(userId); //find all PROJECT by a specefic user id
 
         }
-    @GetMapping("/{idP}") // List project by its ID
-    public ResponseEntity<ProjectEntity> getProjectById(@PathVariable("idP") Long idP) {
-        ProjectEntity projectEntity = projectService.getProjectById(idP);
-        return ResponseEntity.ok(projectEntity);
+    @GetMapping("/{id}") // List project by its ID
+    public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") Long projectId) {
+        ProjectDto projectDto = projectService.getProjectById(projectId);
+        return ResponseEntity.ok(projectDto);
     }//done
 
 
 
 
-    @GetMapping(path = "/listProjet{id}") //liste de projet d'un user
-    public List<ProjectEntity> getProjectrByUser(@PathVariable("id") Long id) {
-        return projectRepository.findByUserId(id); //user id in a project id_p
-        //product in events eventId
-    }
+//    @GetMapping(path = "/listProjet{id}") //liste de projet d'un user
+//    public List<ProjectEntity> getProjectrByUser(@PathVariable("id") Long id) {
+//        return projectRepository.findByUserId(id); //user id in a project id_p
+//        //product in events eventId
+//    }
 
 
 
-    @PostMapping (path="/create_project")  //CREATE PROJECT
-    public ResponseEntity<ProjectEntity> createProject(@RequestBody ProjectEntity project) {
+    @PostMapping (path="/new")  //CREATE PROJECT
+    public ResponseEntity<ProjectEntity> createProject(@RequestBody ProjectDto project) {
         ProjectEntity newProject = projectService.createProject(project);
         return ResponseEntity.ok(newProject);
     } //done
 
 
-    @PutMapping("/update{idP}")
-    public ResponseEntity<ProjectEntity> updateProject(@PathVariable("id_p") Long id_p, @RequestBody ProjectEntity projectEntity) {
-        ProjectEntity updatedProject = projectService.updateProject(id_p, projectEntity);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ProjectEntity> updateProject(@PathVariable("id") Long projectId, @RequestBody ProjectEntity projectEntity) {
+        ProjectEntity updatedProject = projectService.updateProject(projectId, projectEntity);
         return ResponseEntity.ok(updatedProject);
     } //done
 
-    @DeleteMapping("/delete_project")
-    public ResponseEntity<Void> deleteProject(@PathVariable("id_p") Long id_p) {
-        projectService.deleteProject(id_p);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteProject(@PathVariable("id") Long projectId) {
+        projectService.deleteProject(projectId);
         return ResponseEntity.ok().build();
     }//done
 
 
-    @GetMapping("/searchTitle")
+    @GetMapping("/search")
     public ResponseEntity<List<ProjectEntity>> searchProjectsByTitle(@RequestParam("title") String title) {
         List<ProjectEntity> projects = projectService.searchByTitle(title);
         return ResponseEntity.ok(projects);

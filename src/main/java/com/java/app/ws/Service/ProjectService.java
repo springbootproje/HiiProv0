@@ -4,12 +4,15 @@ import com.java.app.ws.Repository.ProjectRepository;
 import com.java.app.ws.Repository.UserRepository;
 import com.java.app.ws.Entity.ProjectEntity;
 import com.java.app.ws.Entity.UserEntity;
+import com.java.app.ws.dto.ProjectDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class ProjectService {
@@ -26,19 +29,33 @@ public class ProjectService {
     }
 
 
-    public ProjectEntity createProject(ProjectEntity projectEntity) {
+    public ProjectEntity createProject(ProjectDto projectDto) {
+        ProjectEntity projectEntity = new ProjectEntity();
+        BeanUtils.copyProperties(projectDto,projectEntity);
         // Check if the creation date is not set
-        if (projectEntity.getCreate_date() == null) {
+        if (projectEntity.getCreateDate() == null) {
             // Set the creation date to the current date
-            projectEntity.setCreate_date(LocalDate.now());
+            projectEntity.setCreateDate(LocalDate.now());
         }
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(projectDto.getUserId());
+        projectEntity.setUser(userEntity);
         return projectRepository.save(projectEntity);
     }
 
-    public ProjectEntity getProjectById(Long id) {
+    public ProjectDto getProjectById(Long id) {
         // Fetch a project by its ID or throw an exception if not found
-        return projectRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Project not found with id: " + id));
+        Optional<ProjectEntity> projectEntityOptional= projectRepository.findById(id);
+        if(projectEntityOptional.isPresent()){
+            ProjectEntity projectEntity = projectEntityOptional.get();
+            ProjectDto projectDto = new ProjectDto();
+            BeanUtils.copyProperties(projectEntity, projectDto);
+            // if you want to add userId
+            projectDto.setUserId(projectEntity.getUser().getId());
+            return projectDto;
+        }
+
+        return null;
     }
 
 
@@ -52,9 +69,11 @@ public class ProjectService {
         ProjectEntity projectEntity = projectRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Project not found with id: " + id));
 
-        projectEntity.setProject_title(projectDetails.getProject_title());
+        projectEntity.setTitle(projectDetails.getTitle());
         projectEntity.setDescription(projectDetails.getDescription());
         // Optionally allow updating the creation date or other fields
+        // Do not update create date but you can add a field called update_date that you automatically update at this moment
+
 
         return projectRepository.save(projectEntity);
     }
@@ -69,7 +88,7 @@ public class ProjectService {
 
     public List<ProjectEntity> searchByTitle(String title) {
         // Search project par titre
-        return projectRepository.findByProject_titleContaining(title);
+        return projectRepository.findByTitleContaining(title);
     }
 
     public List<ProjectEntity> findAllProjectsByUserId(Long userId) {
@@ -93,16 +112,16 @@ public class ProjectService {
                 .orElseThrow(() -> new RuntimeException("Project not found or not owned by user"));
 
 
-        projectEntity.setProject_title(projectDetails.getProject_title());
+        projectEntity.setTitle(projectDetails.getTitle());
         projectEntity.setDescription(projectDetails.getDescription());
-        projectEntity.setCreate_date(projectDetails.getCreate_date());
+        projectEntity.setCreateDate(projectDetails.getCreateDate());
 
 
         return projectRepository.save(projectEntity);
     }
 
     public List<ProjectEntity> findByCreationDateRange(LocalDate start, LocalDate end) {
-        return projectRepository.findByCreate_dateBetween(start, end);
+        return projectRepository.findByCreateDateBetween(start, end);
     }
 
     public void removeProjectFromUser(Long id_p, Long id) {
@@ -122,10 +141,10 @@ public class ProjectService {
 
 
     public List<ProjectEntity> searchProjects(String keyword) {
-        return projectRepository.findByProject_titleContainingOrDescriptionContaining(keyword, keyword);
+        return projectRepository.findByTitleContainingOrDescriptionContaining(keyword, keyword);
     }
     public List<ProjectEntity> getProjectsByDateRange(LocalDate start, LocalDate end) {
-        return projectRepository.findByCreate_dateBetween(start, end);
+        return projectRepository.findByCreateDateBetween(start, end);
     }
     public UserEntity getUserByProject(Long id_p) {
 
