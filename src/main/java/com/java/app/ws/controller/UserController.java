@@ -1,5 +1,7 @@
 package com.java.app.ws.controller;
 
+import com.java.app.ws.dto.CreateUserDto;
+import com.java.app.ws.dto.UserDto;
 import com.java.app.ws.service.ProjectService;
 import com.java.app.ws.service.UserService;
 import com.java.app.ws.entity.UserEntity;
@@ -14,7 +16,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 	/*@Autowired
 	UserService userService;*/
@@ -29,24 +31,24 @@ public class UserController {
     }
 
 	@PostMapping(path="/new")
-	public ResponseEntity<UserEntity> createUser(@RequestBody UserEntity user) {
-		UserEntity newUser = userService.createUser(user);
+	public ResponseEntity<CreateUserDto> createUser(@RequestBody CreateUserDto user) {
+		CreateUserDto newUser = userService.createUser(user);
 		return ResponseEntity.ok(newUser);
 	}
 
-	@GetMapping(path="/allUser")
-	public ResponseEntity<List<UserEntity>> getAllUsers() {
-		List<UserEntity> users = userService.getAllUsers();
+	@GetMapping(path="/list")
+	public ResponseEntity<List<UserDto>> getAllUsers() {
+		List<UserDto> users = userService.getAllUsers();
 		return ResponseEntity.ok(users);
 	}
 
-	@GetMapping("/user{id}")
+	@GetMapping("/get/{id}")
 	public ResponseEntity<UserEntity> getUserById(@PathVariable Long id) {
 		UserEntity user = userService.getUserById(id);
 		return ResponseEntity.ok(user);
 	}
 
-	@PutMapping("/update{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<UserEntity> updateUser(@PathVariable Long id, @RequestBody UserEntity userDetails) {
 		// Assume the incoming userDetails object does not contain password information
 		UserEntity updatedUser = userService.updateUser(id, userDetails);

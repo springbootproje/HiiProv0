@@ -24,7 +24,6 @@ public class UserDto implements Serializable{
 
 	private String telephone;
 
-	private String password;
 
 	public String getFirstName() {
 		return firstName;
@@ -32,14 +31,6 @@ public class UserDto implements Serializable{
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getRole() {
@@ -79,9 +70,8 @@ public class UserDto implements Serializable{
 	}
 
 
-
-
-
-
+	public long getId() {
+		return id;
+	}
 }
  

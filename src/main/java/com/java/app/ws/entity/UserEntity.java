@@ -1,14 +1,13 @@
  package com.java.app.ws.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.*;
 
 
-
-@Entity(name="user") //lier a table user
+ @Entity(name="user") //lier a table user
 public class UserEntity implements Serializable{
 
 	/**
@@ -40,6 +39,21 @@ public class UserEntity implements Serializable{
 
 	@Column(nullable=false)
 	private String password;
+
+	 public LocalDate getCreateDate() {
+		 return createDate;
+	 }
+
+	 public void setCreateDate(LocalDate createDate) {
+		 this.createDate = createDate;
+	 }
+
+	 @Column(name = "create_date", nullable = false)
+	 private LocalDate createDate;
+
+//	@OneToMany
+//	private List<ProjectEntity> projects;
+
 
 	public String getFirstName() {
 		return firstName;

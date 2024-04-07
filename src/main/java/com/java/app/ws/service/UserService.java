@@ -1,10 +1,16 @@
 package com.java.app.ws.service;
 
+import com.java.app.ws.dto.CreateUserDto;
+import com.java.app.ws.dto.UserDto;
 import com.java.app.ws.repository.UserRepository;
 import com.java.app.ws.entity.UserEntity;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,14 +28,27 @@ public class UserService {
 	}
 
 
-	public UserEntity createUser(UserEntity user) {
+	public CreateUserDto createUser(CreateUserDto createUserDto) {
+		UserEntity userEntity = new UserEntity();
+		BeanUtils.copyProperties(createUserDto, userEntity);
 		// Encrypting the password before saving the user
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		return userRepository.save(user);
+		userEntity.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
+		userEntity.setCreateDate(LocalDate.now());
+		//user.setPassword(passwordEncoder.encode(user.getPassword()));
+		UserEntity result = userRepository.save(userEntity);
+		//return UserDto in order to show ID
+		return createUserDto;
 	}
 
-	public List<UserEntity> getAllUsers() {
-		return userRepository.findAll();
+	public List<UserDto> getAllUsers() {
+		List<UserEntity>  userEntityList = userRepository.findAll();
+		List<UserDto> userDtoList = new ArrayList<>();
+		for(UserEntity entity : userEntityList){
+			UserDto dto = new UserDto();
+			BeanUtils.copyProperties(entity, dto);
+			userDtoList.add(dto);
+		}
+		return userDtoList;
 	}
 
 
