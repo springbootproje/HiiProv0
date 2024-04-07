@@ -1,9 +1,9 @@
-package com.java.app.ws.Service;
+package com.java.app.ws.service;
 
-import com.java.app.ws.Repository.ProjectRepository;
-import com.java.app.ws.Repository.UserRepository;
-import com.java.app.ws.Entity.ProjectEntity;
-import com.java.app.ws.Entity.UserEntity;
+import com.java.app.ws.repository.ProjectRepository;
+import com.java.app.ws.repository.UserRepository;
+import com.java.app.ws.entity.ProjectEntity;
+import com.java.app.ws.entity.UserEntity;
 import com.java.app.ws.dto.ProjectDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

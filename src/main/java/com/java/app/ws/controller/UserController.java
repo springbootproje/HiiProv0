@@ -1,11 +1,8 @@
-package com.java.app.ws.Controller;
+package com.java.app.ws.controller;
 
-import com.java.app.ws.Repository.ProjectRepository;
-import com.java.app.ws.Repository.UserRepository;
-
-import com.java.app.ws.Service.ProjectService;
-import com.java.app.ws.Service.UserService;
-import com.java.app.ws.Entity.UserEntity;
+import com.java.app.ws.service.ProjectService;
+import com.java.app.ws.service.UserService;
+import com.java.app.ws.entity.UserEntity;
 
 import org.springframework.http.ResponseEntity;
 

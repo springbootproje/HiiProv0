@@ -1,10 +1,10 @@
-package com.java.app.ws.Controller;
+package com.java.app.ws.controller;
 
 
-import com.java.app.ws.Repository.ProjectRepository;
+import com.java.app.ws.repository.ProjectRepository;
 
-import com.java.app.ws.Service.ProjectService;
-import com.java.app.ws.Entity.ProjectEntity;
+import com.java.app.ws.service.ProjectService;
+import com.java.app.ws.entity.ProjectEntity;
 import com.java.app.ws.dto.ProjectDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;

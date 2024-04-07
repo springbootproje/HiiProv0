@@ -1,6 +1,6 @@
-package com.java.app.ws.Repository;
+package com.java.app.ws.repository;
 
-import com.java.app.ws.Entity.UserEntity;
+import com.java.app.ws.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.stereotype.Repository;

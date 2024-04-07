@@ -1,6 +1,6 @@
-package com.java.app.ws.Repository;
+package com.java.app.ws.repository;
 
-import com.java.app.ws.Entity.ProjectEntity;
+import com.java.app.ws.entity.ProjectEntity;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

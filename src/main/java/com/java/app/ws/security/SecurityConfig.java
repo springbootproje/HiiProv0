@@ -1,4 +1,4 @@
-package com.java.app.ws.Security;
+package com.java.app.ws.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

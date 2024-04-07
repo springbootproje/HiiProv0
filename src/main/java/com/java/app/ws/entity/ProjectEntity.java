@@ -1,6 +1,5 @@
-package com.java.app.ws.Entity;
+package com.java.app.ws.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 

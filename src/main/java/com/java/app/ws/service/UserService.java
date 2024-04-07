@@ -1,7 +1,7 @@
-package com.java.app.ws.Service;
+package com.java.app.ws.service;
 
-import com.java.app.ws.Repository.UserRepository;
-import com.java.app.ws.Entity.UserEntity;
+import com.java.app.ws.repository.UserRepository;
+import com.java.app.ws.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
