@@ -15,3 +15,12 @@ CREATE TABLE project (
      PRIMARY KEY (ID),
      FOREIGN KEY (user_id) REFERENCES user(id)
 );
+alter table user
+    ADD column createDate timestamp;
+CREATE TABLE project_user (
+                              project_id BIGINT NOT NULL,
+                              user_id BIGINT NOT NULL,
+                              PRIMARY KEY (project_id, user_id),
+                              FOREIGN KEY (project_id) REFERENCES project(id),
+                              FOREIGN KEY (user_id) REFERENCES user(id)
+);

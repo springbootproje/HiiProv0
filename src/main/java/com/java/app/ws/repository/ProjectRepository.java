@@ -1,3 +1,4 @@
+
 package com.java.app.ws.repository;
 
 import com.java.app.ws.entity.ProjectEntity;
@@ -23,5 +24,9 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     Optional<ProjectEntity> findByIdAndUserId(Long ip_p, Long id);
     List<ProjectEntity> findByTitleContainingOrDescriptionContaining(String title, String description);
     Optional<ProjectEntity> findById(Long id);
+    List<ProjectEntity> findByUser_Id(Long userId);
+
+    List<ProjectEntity> findByTitle(String title);
+
 
 }

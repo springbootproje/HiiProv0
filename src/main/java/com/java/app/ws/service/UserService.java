@@ -35,7 +35,7 @@ public class UserService {
 		userEntity.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
 		userEntity.setCreateDate(LocalDate.now());
 		//user.setPassword(passwordEncoder.encode(user.getPassword()));
-		UserEntity result = userRepository.save(userEntity);
+		UserEntity result = userRepository.save(userEntity); //sauvegarde
 		//return UserDto in order to show ID
 		return createUserDto;
 	}
@@ -53,10 +53,20 @@ public class UserService {
 
 
 
-	public UserEntity getUserById(Long id) {
-		return userRepository.findById(id)
+	public UserDto getUserById(Long id) {
+		UserEntity userEntity = userRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("User not found"));
+
+		// Crée une nouvelle instance de UserDto
+		UserDto userDto = new UserDto();
+
+		// Copie les propriétés de userEntity vers userDto
+		BeanUtils.copyProperties(userEntity, userDto);
+
+		// Retourne le DTO au lieu de l'entité
+		return userDto;
 	}
+
 
 
 
@@ -66,65 +76,67 @@ public class UserService {
 		UserEntity user = userRepository.findById(userId)
 				.orElseThrow(() -> new RuntimeException("User not found"));
 
-		// Verify the current password matches
 		if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
 			throw new RuntimeException("Current password is incorrect");
 		}
 
-
-		if (newPassword == null || newPassword.length() < 8) {
-			throw new RuntimeException("New password does not meet requirements");
+		if (newPassword.length() < 8) {
+			throw new RuntimeException("New password must be at least 8 characters long");
 		}
 
+		// Ajoute ici d'autres règles si nécessaire
 
 		user.setPassword(passwordEncoder.encode(newPassword));
 		userRepository.save(user);
-
-		return true; // Indicate the operation was successful
+		return true;
 	}
 
 
 
-	public void deleteUser(Long id) {
-		userRepository.deleteById(id);
-	}
 
-	public UserEntity getUserByEmail(String email) {
-		return userRepository.findByEmail(email)
-				.orElseThrow(() -> new RuntimeException("User not found by email"));
-	}
-
-
-
-	public UserEntity updateUser(Long id, UserEntity userDetails) {
-		// Fetch the existing user by id.
+	public void deleteUser(Long id) { //***
 		UserEntity user = userRepository.findById(id)
+				.orElseThrow(() -> new RuntimeException("User not found"));
+		userRepository.delete(user);
+	}
+
+
+
+
+
+	public UserDto updateUser(Long id, UserDto userDetailsDto) { //done pour test de la methode ****
+		// Fetch the existing user by id.
+		UserEntity userEntity = userRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 
-		//IF MAIL TAKEN OU PAS
-		if (userDetails.getEmail() != null && !userDetails.getEmail().isEmpty() && !userDetails.getEmail().equals(user.getEmail())) {
-			Optional<UserEntity> existingUserWithEmail = userRepository.findByEmail(userDetails.getEmail());
+		// Check if the email has changed and is not taken by another user.
+		if (userDetailsDto.getEmail() != null && !userDetailsDto.getEmail().isEmpty() && !userDetailsDto.getEmail().equals(userEntity.getEmail())) {
+			Optional<UserEntity> existingUserWithEmail = userRepository.findByEmail(userDetailsDto.getEmail());
 			if (existingUserWithEmail.isPresent()) {
 				throw new RuntimeException("Email is already in use by another user");
 			}
-			user.setEmail(userDetails.getEmail());
+			userEntity.setEmail(userDetailsDto.getEmail());
 		}
 
-		//UPDATE SANS PASSWORD
-		if (userDetails.getFirstName() != null && !userDetails.getFirstName().isEmpty()) {
-			user.setFirstName(userDetails.getFirstName());
+		// Only update the fields that are allowed to change
+		if (userDetailsDto.getFirstName() != null && !userDetailsDto.getFirstName().isEmpty()) {
+			userEntity.setFirstName(userDetailsDto.getFirstName());
 		}
-		if (userDetails.getLastName() != null && !userDetails.getLastName().isEmpty()) {
-			user.setLastName(userDetails.getLastName());
-		}
-		if (userDetails.getTelephone() != null && !userDetails.getTelephone().isEmpty()) {
-			user.setTelephone(userDetails.getTelephone());
-		}
-		if (userDetails.getRole() != null && !userDetails.getRole().isEmpty()) {
-			user.setRole(userDetails.getRole());
+		if (userDetailsDto.getLastName() != null && !userDetailsDto.getLastName().isEmpty()) {
+			userEntity.setLastName(userDetailsDto.getLastName());
 		}
 
-		return userRepository.save(user);
+		// Save the updated entity
+		UserEntity updatedUserEntity = userRepository.save(userEntity);
+
+		// Convert the updated entity back to a DTO
+		UserDto updatedUserDto = new UserDto();
+		BeanUtils.copyProperties(updatedUserEntity, updatedUserDto);
+
+		// Return the updated DTO
+		return updatedUserDto;
 	}
+
+
 }
 

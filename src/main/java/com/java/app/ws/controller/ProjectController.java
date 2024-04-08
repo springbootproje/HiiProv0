@@ -36,9 +36,9 @@ public class ProjectController {
     }
     @GetMapping(path = "/user_projects/{user_id}")
     public List<ProjectEntity> getProjectByUser(@PathVariable("user_id") Long userId){
-            return projectService.findAllProjectsByUserId(userId); //find all PROJECT by a specefic user id
+        return projectService.findAllProjectsByUserId(userId); //find all PROJECT by a specefic user id
 
-        }
+    }
     @GetMapping("/{id}") // List project by its ID
     public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") Long projectId) {
         ProjectDto projectDto = projectService.getProjectById(projectId);

@@ -10,9 +10,7 @@ import jakarta.persistence.*;
  @Entity(name="user") //lier a table user
 public class UserEntity implements Serializable{
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 2565811476026900613L;
     @jakarta.persistence.Id
     @GeneratedValue
@@ -51,11 +49,18 @@ public class UserEntity implements Serializable{
 	 @Column(name = "create_date", nullable = false)
 	 private LocalDate createDate;
 
-//	@OneToMany
-//	private List<ProjectEntity> projects;
+	@OneToMany
+	private List<ProjectEntity> projects;
 
+	 public List<ProjectEntity> getProjects() {
+		 return projects;
+	 }
 
-	public String getFirstName() {
+	 public void setProjects(List<ProjectEntity> projects) {
+		 this.projects = projects;
+	 }
+
+	 public String getFirstName() {
 		return firstName;
 	}
 

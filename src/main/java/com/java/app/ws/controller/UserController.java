@@ -1,18 +1,18 @@
 package com.java.app.ws.controller;
 
 import com.java.app.ws.dto.CreateUserDto;
+import com.java.app.ws.dto.PasswordChangeDto;
 import com.java.app.ws.dto.UserDto;
 import com.java.app.ws.service.ProjectService;
 import com.java.app.ws.service.UserService;
-import com.java.app.ws.entity.UserEntity;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
-
 
 
 @RestController
@@ -26,68 +26,71 @@ public class UserController {
 	private final ProjectService projectService;
 
 	public UserController(UserService userService, ProjectService projectService) {
-		this.userService =userService;
+		this.userService = userService;
         this.projectService = projectService;
     }
 
-	@PostMapping(path="/new")
+	@PostMapping(path="/new") //method tested
 	public ResponseEntity<CreateUserDto> createUser(@RequestBody CreateUserDto user) {
 		CreateUserDto newUser = userService.createUser(user);
-		return ResponseEntity.ok(newUser);
+		return ResponseEntity.ok(newUser); //method tested
 	}
 
-	@GetMapping(path="/list")
+	@GetMapping(path="/list") //method tested
 	public ResponseEntity<List<UserDto>> getAllUsers() {
 		List<UserDto> users = userService.getAllUsers();
 		return ResponseEntity.ok(users);
 	}
 
-	@GetMapping("/get/{id}")
-	public ResponseEntity<UserEntity> getUserById(@PathVariable Long id) {
-		UserEntity user = userService.getUserById(id);
-		return ResponseEntity.ok(user);
+	@GetMapping("/get/{id}") //method tested
+	public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+		UserDto userDto = userService.getUserById(id);
+		return ResponseEntity.ok(userDto);
 	}
 
-	@PutMapping("/update/{id}")
-	public ResponseEntity<UserEntity> updateUser(@PathVariable Long id, @RequestBody UserEntity userDetails) {
+	@PutMapping("/update/{id}") //method tested
+	public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto userDetails) {
 		// Assume the incoming userDetails object does not contain password information
-		UserEntity updatedUser = userService.updateUser(id, userDetails);
-		return ResponseEntity.ok(updatedUser);
+		UserDto updatedUserDto = userService.updateUser(id, userDetails);
+		return ResponseEntity.ok(updatedUserDto);
 	}
 
-	@PostMapping("/{id}/change-password")
-	public ResponseEntity<?> changePassword(@PathVariable Long id,
-											@RequestParam String currentPassword,
-											@RequestParam String newPassword) {
-		// Ensure this endpoint is secure and accessible only by the user whose ID is specified
-		boolean success = userService.updatePassword(id, currentPassword, newPassword);
-		if (success) {
-			return ResponseEntity.ok().build();
-		} else {
-			// Handle failure scenario, possibly returning a different status or error message
-			return ResponseEntity.badRequest().body("Password update failed");
+
+	@PostMapping("/{id}/change-password") //method tested
+	public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody PasswordChangeDto passwordChangeDto) {
+		try {
+			userService.updatePassword(id, passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
+			return ResponseEntity.ok("Password updated successfully");
+		} catch (RuntimeException ex) {
+			// Dans un vrai scénario, tu devrais gérer cela globalement avec @ControllerAdvice
+			return ResponseEntity
+					.status(HttpStatus.BAD_REQUEST)
+					.body(ex.getMessage());
 		}
 	}
 
 
-	@DeleteMapping("/delete{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+	@DeleteMapping("/delete{id}")//method tsted
+	public ResponseEntity<?> deleteUser(@PathVariable Long id) {
 		userService.deleteUser(id);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok("User deleted successfully");
 	}
 
 
-	@GetMapping("/email/{email}")
-	public ResponseEntity<UserEntity> getUserByEmail(@PathVariable String email) {
-		UserEntity user = userService.getUserByEmail(email);
-		return ResponseEntity.ok(user);
+	//@GetMapping("/users/email/{email}")
+	//public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) {
+		//UserDto userDto = userService.getUserByEmail(email);
+		//return ResponseEntity.ok(userDto);
+	//}
+
+
+
+	//@GetMapping("/{projectId}/users")
+	//public ResponseEntity<List<UserDto>> getUsersByProject(@PathVariable Long projectId) {
+		//List<UserDto> users = projectService.getUsersByProject(projectId);
+		//return ResponseEntity.ok(users);
 	}
 
-	@GetMapping("/{projectId}/user")
-	public ResponseEntity<UserEntity> getUserByProject(@PathVariable Long projectId) {
-		UserEntity user = projectService.getUserByProject(projectId);
-		return ResponseEntity.ok(user);
-	}
 
 
 
@@ -95,8 +98,8 @@ public class UserController {
 
 
 
-	}
-	
-	
+
+
+
 
 
