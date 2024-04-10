@@ -1,11 +1,16 @@
 package com.java.app.ws.controller;
 
 
+import com.java.app.ws.ApiResponse;
+import com.java.app.ws.dto.ProjectCreationDto;
+import com.java.app.ws.dto.ProjectDetailsDto;
+import com.java.app.ws.dto.ProjectSummaryDto;
 import com.java.app.ws.repository.ProjectRepository;
 
-import com.java.app.ws.service.ProjectService;
+import com.java.app.ws.service.ProjectServiceImpl;
 import com.java.app.ws.entity.ProjectEntity;
 import com.java.app.ws.dto.ProjectDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/project")
@@ -20,97 +26,96 @@ public class ProjectController {
 
 
     private final ProjectRepository projectRepository;
-    private final ProjectService projectService;
+    private final ProjectServiceImpl projectServiceImpl;
 
     @Autowired
-    public ProjectController(ProjectRepository projectRepository, ProjectService projectService) {
+    public ProjectController(ProjectRepository projectRepository, ProjectServiceImpl projectServiceImpl) {
         this.projectRepository = projectRepository;
-        this.projectService = projectService;
+        this.projectServiceImpl = projectServiceImpl;
     }
 
-
-    @GetMapping("/list")
-    public ResponseEntity<List<ProjectEntity>> getAllProjects() {
-        List<ProjectEntity> projects = projectService.getAllProjects();
+    @PostMapping (path="/new")  //methos tested
+    public ResponseEntity<ProjectDto> createProject(@RequestBody ProjectCreationDto projectCreationDto) {
+        ProjectDto createdProject = projectServiceImpl.createProject(projectCreationDto);
+        return ResponseEntity.ok(createdProject);
+    }
+    @GetMapping("/list")//method tested
+    public ResponseEntity<List<ProjectSummaryDto>> getAllProjects() {
+        List<ProjectSummaryDto> projects = projectServiceImpl.getAllProjectSummaries();
         return ResponseEntity.ok(projects); //done
     }
-    @GetMapping(path = "/user_projects/{user_id}")
-    public List<ProjectEntity> getProjectByUser(@PathVariable("user_id") Long userId){
-        return projectService.findAllProjectsByUserId(userId); //find all PROJECT by a specefic user id
-
-    }
-    @GetMapping("/{id}") // List project by its ID
-    public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") Long projectId) {
-        ProjectDto projectDto = projectService.getProjectById(projectId);
-        return ResponseEntity.ok(projectDto);
-    }//done
 
 
 
-
-//    @GetMapping(path = "/listProjet{id}") //liste de projet d'un user
-//    public List<ProjectEntity> getProjectrByUser(@PathVariable("id") Long id) {
-//        return projectRepository.findByUserId(id); //user id in a project id_p
-//        //product in events eventId
-//    }
-
-
-
-    @PostMapping (path="/new")  //CREATE PROJECT
-    public ResponseEntity<ProjectEntity> createProject(@RequestBody ProjectDto project) {
-        ProjectEntity newProject = projectService.createProject(project);
-        return ResponseEntity.ok(newProject);
-    } //done
-
-
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ProjectEntity> updateProject(@PathVariable("id") Long projectId, @RequestBody ProjectEntity projectEntity) {
-        ProjectEntity updatedProject = projectService.updateProject(projectId, projectEntity);
-        return ResponseEntity.ok(updatedProject);
-    } //done
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteProject(@PathVariable("id") Long projectId) {
-        projectService.deleteProject(projectId);
-        return ResponseEntity.ok().build();
-    }//done
-
-
-    @GetMapping("/search")
-    public ResponseEntity<List<ProjectEntity>> searchProjectsByTitle(@RequestParam("title") String title) {
-        List<ProjectEntity> projects = projectService.searchByTitle(title);
+    @GetMapping("/search") //tested
+    public ResponseEntity<List<ProjectSummaryDto>> searchProjectsByTitle(@RequestParam("title") String title) {
+        List<ProjectSummaryDto> projects = projectServiceImpl.searchByTitle(title);
         return ResponseEntity.ok(projects);
+    }
+
+
+    @DeleteMapping("/delete/{id}") //method tested
+    public ResponseEntity<ApiResponse> deleteProject(@PathVariable("id") Long projectId) {
+        projectServiceImpl.deleteProject(projectId);
+        ApiResponse response = new ApiResponse("Project deleted successfully");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/date")
-    public ResponseEntity<List<ProjectEntity>> getProjectsByCreationDate(
-            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        List<ProjectEntity> projects = projectService.findByCreationDateRange(startDate, endDate);
+    public ResponseEntity<List<ProjectDto>> getProjectsFromStartDate(
+            @RequestParam("start")@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate) {
+        List<ProjectDto> projects = projectServiceImpl.getProjectsFromStartDate(startDate);
         return ResponseEntity.ok(projects);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
     @GetMapping("/searchText")
     public ResponseEntity<List<ProjectEntity>> searchProjects(@RequestParam String keyword) {
-        List<ProjectEntity> projects = projectService.searchProjects(keyword);
+        List<ProjectEntity> projects = projectServiceImpl.searchProjects(keyword);
         return ResponseEntity.ok(projects);
     }
 
-    @GetMapping("/by-date-range")
-    public ResponseEntity<List<ProjectEntity>> getProjectsByDateRange(
-            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
-        List<ProjectEntity> projects = projectService.getProjectsByDateRange(start, end);
-        return ResponseEntity.ok(projects);
-    }
+    //@GetMapping("/{id}")
+   // public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") Long projectId) {
+        //ProjectDto projectDto = projectServiceImpl.getProjectById(projectId);
+
+       // return ResponseEntity.ok(projectDto);
+   // }
+
+
+
+
+
+
+
+
+
+
+
+
 
     @PutMapping("/{projectId}/transfer")
     public ResponseEntity<ProjectEntity> transferProjectToAnotherUser(
             @PathVariable Long projectId,
             @RequestParam Long newOwnerId) {
-        ProjectEntity updatedProject = projectService.transferProjectToAnotherUser(projectId, newOwnerId);
+        ProjectEntity updatedProject = projectServiceImpl.transferProjectToAnotherUser(projectId, newOwnerId);
         return ResponseEntity.ok(updatedProject);
     }
 
@@ -118,8 +123,12 @@ public class ProjectController {
     public ResponseEntity<Void> removeProjectFromUser(
             @PathVariable Long projectId,
             @PathVariable Long userId) {
-        projectService.removeProjectFromUser(projectId, userId);
+        projectServiceImpl.removeProjectFromUser(projectId, userId);
         return ResponseEntity.ok().build();
     }
-
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ProjectEntity> updateProject(@PathVariable("id") Long projectId, @RequestBody ProjectEntity projectEntity) {
+        ProjectEntity updatedProject = projectServiceImpl.updateProject(projectId, projectEntity);
+        return ResponseEntity.ok(updatedProject);
+    }
 }

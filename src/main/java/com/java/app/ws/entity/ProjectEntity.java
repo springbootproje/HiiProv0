@@ -1,7 +1,6 @@
 package com.java.app.ws.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.java.app.ws.dto.UserDto;
 import jakarta.persistence.*;
 
 
@@ -71,6 +70,6 @@ public class ProjectEntity implements Serializable  {
 
     public UserEntity getUser() {return user;}
 
-   public void setUser(UserEntity user) {
+    public void setUser(UserEntity user) {
         this.user = user;}
 }

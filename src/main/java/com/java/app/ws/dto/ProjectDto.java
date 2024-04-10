@@ -7,6 +7,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public class ProjectDto implements Serializable  {
 
@@ -45,11 +46,7 @@ public class ProjectDto implements Serializable  {
         this.userId = user;
     }
 
-    public List<UserDto> getUsers() {
-        return users;
-    }
+    public List<UserDto> getUsers() {return users;}
 
-    public void setUsers(List<UserDto> users) {
-        this.users = users;
-    }
+    public void setUsers(List<UserDto> users) {this.users = users;}
 }

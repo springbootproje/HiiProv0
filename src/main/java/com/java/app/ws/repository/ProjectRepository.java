@@ -1,6 +1,7 @@
 
 package com.java.app.ws.repository;
 
+import com.java.app.ws.dto.ProjectDto;
 import com.java.app.ws.entity.ProjectEntity;
 
 
@@ -14,8 +15,10 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
-    List<ProjectEntity> findByTitleContaining(String project_title);
-    List<ProjectEntity> findByCreateDateBetween(LocalDate start, LocalDate end);
+    List<ProjectEntity> findByTitleContaining(String title);
+
+    List<ProjectDto> findByCreateDateGreaterThanEqual(LocalDate startDate);
+
 
 
     List<ProjectEntity> findByUserId(Long id);
