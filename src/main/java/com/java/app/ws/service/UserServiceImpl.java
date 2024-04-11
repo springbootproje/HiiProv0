@@ -2,7 +2,10 @@
 
 package com.java.app.ws.service;
 
+import com.java.app.ws.Response.LoginResponse;
+import com.java.app.ws.dto.LoginDTO;
 import com.java.app.ws.dto.UpdateUserDto;
+import com.java.app.ws.repository.LoginRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,8 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+	@Autowired
+	private LoginRepo loginRepo;
 
 	@Autowired
 	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -43,6 +48,27 @@ public class UserServiceImpl implements UserService {
 		newUserDto.setId(savedUser.getId()); // Déjà inclus grâce à BeanUtils si ces champs existent dans UserEntity
 		// Pas besoin d'ajouter les autres champs manuellement si BeanUtils a déjà copié les propriétés et que les noms correspondent
 		return newUserDto;
+	}
+	@Override
+	public LoginResponse loginUser(LoginDTO loginDTO) {
+
+		String msg = "";
+		UserEntity userUtity1 = loginRepo.findByEmail(loginDTO.getEmail());
+		if (userUtity1 != null) {
+			String password = loginDTO.getPassword();
+			String encodedPassword = userUtity1.getPassword();
+			Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
+			if (isPwdRight) {
+
+				return new LoginResponse("Login Success", true);
+			} else {
+
+				return new LoginResponse("Password Not Match", false);
+			}
+		} else {
+
+			return new LoginResponse("Email not exists", false);
+		}
 	}
 
 

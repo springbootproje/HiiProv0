@@ -32,11 +32,13 @@ public class UserEntity implements Serializable{
     @Column(nullable=false)
     private String role;
 
-    @Column(nullable=false, unique=true)
-    private String telephone;
+
 
     @Column(nullable=false)
     private String password;
+    @Column(name = "create_date", nullable = false)
+    private LocalDate createDate;
+
 
     public LocalDate getCreateDate() {
         return createDate;
@@ -46,8 +48,6 @@ public class UserEntity implements Serializable{
         this.createDate = createDate;
     }
 
-    @Column(name = "create_date", nullable = false)
-    private LocalDate createDate;
 
     @OneToMany
     private List<ProjectEntity> projects;
@@ -88,13 +88,7 @@ public class UserEntity implements Serializable{
         this.id = id;
     }
 
-    public String getTelephone() {
-        return telephone;
-    }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
 
     public String getEmail() {
         return email;
