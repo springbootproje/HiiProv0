@@ -37,7 +37,7 @@ public class ProjectController {
     @PostMapping (path="/new")  //methos tested
     public ResponseEntity<ProjectDto> createProject(@RequestBody ProjectCreationDto projectCreationDto) {
         ProjectDto createdProject = projectServiceImpl.createProject(projectCreationDto);
-        return ResponseEntity.ok(createdProject);
+        return ResponseEntity.ok(createdProject); //users null, id p
     }
     @GetMapping("/list")//method tested
     public ResponseEntity<List<ProjectSummaryDto>> getAllProjects() {
@@ -50,7 +50,7 @@ public class ProjectController {
     @GetMapping("/search") //tested
     public ResponseEntity<List<ProjectSummaryDto>> searchProjectsByTitle(@RequestParam("title") String title) {
         List<ProjectSummaryDto> projects = projectServiceImpl.searchByTitle(title);
-        return ResponseEntity.ok(projects);
+        return ResponseEntity.ok(projects); //id
     }
 
 
@@ -69,55 +69,48 @@ public class ProjectController {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @GetMapping("/searchText")
-    public ResponseEntity<List<ProjectEntity>> searchProjects(@RequestParam String keyword) {
-        List<ProjectEntity> projects = projectServiceImpl.searchProjects(keyword);
-        return ResponseEntity.ok(projects);
-    }
-
     //@GetMapping("/{id}")
-   // public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") Long projectId) {
-        //ProjectDto projectDto = projectServiceImpl.getProjectById(projectId);
+    // public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") Long projectId) {
+    //ProjectDto projectDto = projectServiceImpl.getProjectById(projectId);
 
-       // return ResponseEntity.ok(projectDto);
-   // }
-
-
+    // return ResponseEntity.ok(projectDto);
+    // }
 
 
 
-
-
-
-
-
-
-
-
-    @PutMapping("/{projectId}/transfer")
-    public ResponseEntity<ProjectEntity> transferProjectToAnotherUser(
-            @PathVariable Long projectId,
-            @RequestParam Long newOwnerId) {
-        ProjectEntity updatedProject = projectServiceImpl.transferProjectToAnotherUser(projectId, newOwnerId);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ProjectEntity> updateProject(@PathVariable("id") Long projectId, @RequestBody ProjectEntity projectEntity) {
+        ProjectEntity updatedProject = projectServiceImpl.updateProject(projectId, projectEntity);
         return ResponseEntity.ok(updatedProject);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @DeleteMapping("/{projectId}/remove-from-user/{userId}")
     public ResponseEntity<Void> removeProjectFromUser(
@@ -126,9 +119,18 @@ public class ProjectController {
         projectServiceImpl.removeProjectFromUser(projectId, userId);
         return ResponseEntity.ok().build();
     }
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ProjectEntity> updateProject(@PathVariable("id") Long projectId, @RequestBody ProjectEntity projectEntity) {
-        ProjectEntity updatedProject = projectServiceImpl.updateProject(projectId, projectEntity);
-        return ResponseEntity.ok(updatedProject);
-    }
+
+    // @GetMapping("/searchText")
+    // public ResponseEntity<List<ProjectEntity>> searchProjects(@RequestParam String keyword) {
+    // List<ProjectEntity> projects = projectServiceImpl.searchProjects(keyword);
+    // return ResponseEntity.ok(projects);
+    // }
+    //@PutMapping("/{projectId}/transfer")
+   // public ResponseEntity<ProjectEntity> transferProjectToAnotherUser(
+            //@PathVariable Long projectId,
+           // @RequestParam Long newOwnerId) {
+       // ProjectEntity updatedProject = projectServiceImpl.transferProjectToAnotherUser(projectId, newOwnerId);
+        //return ResponseEntity.ok(updatedProject);
+   // }
+
 }

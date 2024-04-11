@@ -41,7 +41,7 @@ public interface ProjectService {
 
 
 
-    List<ProjectEntity> searchProjects(String keyword);
+   // List<ProjectEntity> searchProjects(String keyword);
     List<ProjectEntity> findAllProjectsByUserId(Long userId);
 
     void deleteUsersProject(Long projectId, Long userId);

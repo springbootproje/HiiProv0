@@ -154,9 +154,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
 
-    public List<ProjectEntity> searchProjects(String keyword) {
-        return projectRepository.findByTitleContainingOrDescriptionContaining(keyword, keyword);
-    }
+   // public List<ProjectEntity> searchProjects(String keyword) {return projectRepository.findByTitleContainingOrDescriptionContaining(keyword, keyword);}
 
 
 
