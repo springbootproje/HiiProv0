@@ -3,12 +3,15 @@ package com.java.app.ws.entity;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.*;
 
 
 @Entity(name="user") //lier a table user
 public class UserEntity implements Serializable{
+    @ManyToMany
+    Set<ProjectEntity> projects ;
 
 
     private static final long serialVersionUID = 2565811476026900613L;
@@ -109,6 +112,14 @@ public class UserEntity implements Serializable{
 
     public long getId() {
         return id;
+    }
+
+    public void setProjects(Set<ProjectEntity> projects) {
+        this.projects = projects;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
  

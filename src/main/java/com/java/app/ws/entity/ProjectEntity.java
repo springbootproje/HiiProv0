@@ -7,9 +7,12 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity(name="project")
 public class ProjectEntity implements Serializable  {
+@ManyToMany
+    Set<UserEntity> users;
 
     @Serial
     private static final long serialVersionUID= 738341912492712033L;
@@ -72,4 +75,12 @@ public class ProjectEntity implements Serializable  {
 
     public void setUser(UserEntity user) {
         this.user = user;}
+
+    public Set<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<UserEntity> users) {
+        this.users = users;
+    }
 }
