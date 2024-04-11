@@ -1,7 +1,9 @@
 
 package com.java.app.ws.service;
 
+import com.java.app.ws.Response.LoginResponse;
 import com.java.app.ws.dto.CreateUserDto;
+import com.java.app.ws.dto.LoginDTO;
 import com.java.app.ws.dto.UpdateUserDto;
 import com.java.app.ws.dto.UserDto;
 import java.util.List;
@@ -15,4 +17,7 @@ public interface UserService {
 
     void deleteUser(Long id);
     boolean updatePassword(Long userId, String currentPassword, String newPassword);
+
+    LoginResponse loginUser(LoginDTO loginDTO);
+
 }

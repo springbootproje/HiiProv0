@@ -1,9 +1,7 @@
 package com.java.app.ws.controller;
 
-import com.java.app.ws.dto.CreateUserDto;
-import com.java.app.ws.dto.PasswordChangeDto;
-import com.java.app.ws.dto.UpdateUserDto;
-import com.java.app.ws.dto.UserDto;
+import com.java.app.ws.Response.LoginResponse;
+import com.java.app.ws.dto.*;
 import com.java.app.ws.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +24,13 @@ public class UserController {
 		UserDto newUserDto = userService.createUser(createUserDto);
 		return ResponseEntity.ok("User created successfully with ID: " + newUserDto.getId() + ", Name: " + newUserDto.getFirstName() + " " + newUserDto.getLastName() + ", Email: " + newUserDto.getEmail());
 	}
+	@PostMapping(path = "/login")
+	public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDTO)
+	{
+		LoginResponse loginResponse = userService.loginUser(loginDTO);
+		return ResponseEntity.ok(loginResponse);
+	}
+
 
 	@GetMapping("/list") //method tested
 	public ResponseEntity<List<UserDto>> getAllUsers() {
