@@ -1,5 +1,6 @@
 package com.java.app.ws.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 
@@ -32,7 +33,7 @@ public class ProjectEntity implements Serializable  {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    //@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private UserEntity user;
 
     public Long getId() {
@@ -67,11 +68,8 @@ public class ProjectEntity implements Serializable  {
         this.title = title;
     }
 
-    public UserEntity getUser() {
-        return user;
-    }
+    public UserEntity getUser() {return user;}
 
     public void setUser(UserEntity user) {
-        this.user = user;
-    }
+        this.user = user;}
 }
