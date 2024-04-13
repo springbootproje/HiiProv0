@@ -54,9 +54,6 @@ public class ProjectServiceImpl implements ProjectService {
 
 
 
-
-
-
     @Override
     public List<ProjectSummaryDto> getAllProjectSummaries() {
         List<ProjectEntity> projectEntities = projectRepository.findAll();
