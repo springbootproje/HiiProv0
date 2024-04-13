@@ -8,17 +8,21 @@ import com.java.app.ws.entity.UserEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
+    @Autowired
     private final ProjectRepository projectRepository;
+    @Autowired
     private final UserRepository userRepository;
     @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository,UserRepository userRepository) {
@@ -31,26 +35,26 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Transactional
+
     @Override
-    public ProjectDto createProject(ProjectCreationDto projectCreationDto) {
-        ProjectEntity projectEntity = new ProjectEntity();
-        projectEntity.setTitle(projectCreationDto.getTitle());
-        projectEntity.setDescription(projectCreationDto.getDescription());
-        projectEntity.setCreateDate(LocalDate.now()); // La date de création est la date actuelle
 
-        UserEntity userEntity = userRepository.findById(projectCreationDto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + projectCreationDto.getUserId()));
 
-        projectEntity.setUser(userEntity);
+    public ProjectEntity createProject(String title, String description, Long creatorUserId) {
+        UserEntity creator = userRepository.findById(creatorUserId)
+                .orElseThrow(() -> new NoSuchElementException("User not found with ID: " + creatorUserId));
 
-        projectEntity = projectRepository.save(projectEntity);
+        ProjectEntity project = new ProjectEntity();
+        project.setTitle(title);
+        project.setDescription(description);
+        project.setCreateDate(LocalDate.now()); // Set the current date
+        project.setCreator(creator); // Set the creator
 
-        ProjectDto projectDto = new ProjectDto();
-        BeanUtils.copyProperties(projectEntity, projectDto);
-        projectDto.setUserId(userEntity.getId());
-
-        return projectDto;
+        return projectRepository.save(project);
     }
+
+
+
+
 
 
     @Override
@@ -98,10 +102,7 @@ public class ProjectServiceImpl implements ProjectService {
     //hadou li lteht mazal mandirhoum
 
 
-    @Override
-    public List<ProjectEntity> findAllProjectsByUserId(Long userId) {
-        return null;
-    }
+
 
     public ProjectEntity updateProject(Long id, ProjectEntity projectDetails) {
         //  existing project and update its details
@@ -116,47 +117,5 @@ public class ProjectServiceImpl implements ProjectService {
 
         return projectRepository.save(projectEntity);
     }
-
-
-    @Override
-    public void deleteUsersProject(Long projectId, Long userId) {
-        ProjectEntity project = projectRepository.findByIdAndUserId(projectId, userId)
-                .orElseThrow(() -> new RuntimeException("Project not found or not owned by user"));
-        projectRepository.delete(project);
-    }
-
-    public ProjectEntity updateProjectDetails(Long projectId, ProjectEntity projectDetails, Long userId) {
-        ProjectEntity projectEntity = projectRepository.findByIdAndUserId(projectId, userId)
-                .orElseThrow(() -> new RuntimeException("Project not found or not owned by user"));
-
-
-        projectEntity.setTitle(projectDetails.getTitle());
-        projectEntity.setDescription(projectDetails.getDescription());
-        projectEntity.setCreateDate(projectDetails.getCreateDate());
-
-
-        return projectRepository.save(projectEntity);
-    }
-
-    public void removeProjectFromUser(Long id_p, Long id) {
-        ProjectEntity projectEntity = projectRepository.findByIdAndUserId(id_p, id)
-                .orElseThrow(() -> new RuntimeException("Project not found or not owned by the user"));
-        projectRepository.delete(projectEntity);
-    }
-
-    public ProjectEntity transferProjectToAnotherUser(Long id_p, Long newOwnerId) {
-        ProjectEntity projectEntity = projectRepository.findById(id_p)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
-        UserEntity newOwner = userRepository.findById(newOwnerId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        return projectRepository.save(projectEntity);
-    }
-
-
-   // public List<ProjectEntity> searchProjects(String keyword) {return projectRepository.findByTitleContainingOrDescriptionContaining(keyword, keyword);}
-
-
-
 
 }

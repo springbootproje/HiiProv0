@@ -16,11 +16,22 @@ CREATE TABLE project (
      FOREIGN KEY (user_id) REFERENCES user(id)
 );
 alter table user
-    ADD column createDate timestamp;
+    Add column createDate timestamp;
+drop table tache;
 CREATE TABLE project_user (
                               project_id BIGINT NOT NULL,
                               user_id BIGINT NOT NULL,
                               PRIMARY KEY (project_id, user_id),
                               FOREIGN KEY (project_id) REFERENCES project(id),
                               FOREIGN KEY (user_id) REFERENCES user(id)
+);
+CREATE TABLE tache (
+                       id bigint auto_increment not null,
+                       description TEXT,
+                       statut varchar(50),
+                       PRIMARY KEY (ID),
+                       id_u long not null,
+                       id_p bigint not null,
+                       FOREIGN KEY (id_u) REFERENCES user(id),
+                       FOREIGN KEY (id_p) REFERENCES project(id)
 );

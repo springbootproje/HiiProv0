@@ -2,22 +2,22 @@ package com.java.app.ws.controller;
 
 
 import com.java.app.ws.ApiResponse;
-import com.java.app.ws.dto.ProjectCreationDto;
-import com.java.app.ws.dto.ProjectDetailsDto;
-import com.java.app.ws.dto.ProjectSummaryDto;
+import com.java.app.ws.dto.*;
+import com.java.app.ws.entity.UserEntity;
 import com.java.app.ws.repository.ProjectRepository;
 
 import com.java.app.ws.service.ProjectServiceImpl;
 import com.java.app.ws.entity.ProjectEntity;
-import com.java.app.ws.dto.ProjectDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,9 +35,13 @@ public class ProjectController {
     }
 
     @PostMapping (path="/new")  //methos tested
-    public ResponseEntity<ProjectDto> createProject(@RequestBody ProjectCreationDto projectCreationDto) {
-        ProjectDto createdProject = projectServiceImpl.createProject(projectCreationDto);
-        return ResponseEntity.ok(createdProject); //users null, id p
+    public ResponseEntity<?> createProject(@RequestBody ProjectCreationDto projectRequest) {
+        projectServiceImpl.createProject(
+                projectRequest.getTitle(),
+                projectRequest.getDescription(),
+                projectRequest.getCreatorUserId()
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body("Projet ajouté avec succès");
     }
     @GetMapping("/list")//method tested
     public ResponseEntity<List<ProjectSummaryDto>> getAllProjects() {
@@ -112,13 +116,13 @@ public class ProjectController {
 
 
 
-    @DeleteMapping("/{projectId}/remove-from-user/{userId}")
-    public ResponseEntity<Void> removeProjectFromUser(
-            @PathVariable Long projectId,
-            @PathVariable Long userId) {
-        projectServiceImpl.removeProjectFromUser(projectId, userId);
-        return ResponseEntity.ok().build();
-    }
+    //@DeleteMapping("/{projectId}/remove-from-user/{userId}")
+   // public ResponseEntity<Void> removeProjectFromUser(
+         //   @PathVariable Long projectId,
+          //  @PathVariable Long userId) {
+       // projectServiceImpl.removeProjectFromUser(projectId, userId);
+      //  return ResponseEntity.ok().build();
+   // }
 
     // @GetMapping("/searchText")
     // public ResponseEntity<List<ProjectEntity>> searchProjects(@RequestParam String keyword) {
