@@ -1,18 +1,22 @@
 package com.java.app.ws.dto;
 
+import com.java.app.ws.entity.UserEntity;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ProjectCreationDto {
     private String title;
     private String description;
-     private Long userId; // Supposons que cet ID est l'ID de l'utilisateur qui crée le projet
+    private Long creatorUserId; // hadou houma liste des membre normalement
 
-    public Long getUserId() {
-        return userId;
+    public Long getCreatorUserId() {
+        return creatorUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreatorUserId(Long creatorUserId) {
+        this.creatorUserId = creatorUserId;
     }
 
     public String getTitle() {

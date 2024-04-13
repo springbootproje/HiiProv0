@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name="project")
 public class ProjectEntity implements Serializable  {
@@ -18,8 +20,6 @@ public class ProjectEntity implements Serializable  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable=false, updatable = false)
     private Long id;
-
-
     @Column(nullable=false,length=250)
     private String description;
 
@@ -31,10 +31,34 @@ public class ProjectEntity implements Serializable  {
     @Column(nullable=false,length=50)
     private String title;
 
+    @ManyToMany(mappedBy = "assignedProjects")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Set<UserEntity> users= new HashSet<>() ;
+
+    public Set<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<UserEntity> users) {
+        this.users = users;
+    }
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private UserEntity user;
+    private UserEntity creator;
+
+
+
+    public UserEntity getCreator() {
+        return creator;
+    }
+
+    public void setCreator(UserEntity creator) {
+        this.creator = creator;
+    }
+
+
+
+
 
     public Long getId() {
         return id;
@@ -68,8 +92,5 @@ public class ProjectEntity implements Serializable  {
         this.title = title;
     }
 
-    public UserEntity getUser() {return user;}
 
-    public void setUser(UserEntity user) {
-        this.user = user;}
 }

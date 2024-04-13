@@ -21,7 +21,7 @@ import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService {
-
+@Autowired
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	@Autowired

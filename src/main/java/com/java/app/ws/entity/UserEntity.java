@@ -2,7 +2,9 @@ package com.java.app.ws.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.*;
 
@@ -16,6 +18,17 @@ public class UserEntity implements Serializable{
     @GeneratedValue
     @Column(nullable=false)
     private long id;
+@ManyToMany//ici jai ajouter many to many avec avec had lobjet pareil f projectEntity
+@JoinTable(name = "user_projects",
+joinColumns = @JoinColumn(name = "projects_id"),
+            inverseJoinColumns = @JoinColumn(name ="user_id" )
+)
+private Set<ProjectEntity> assignedProjects= new HashSet<>() ;
+
+
+
+
+
 
 
     @Column(nullable=false,length=50)
