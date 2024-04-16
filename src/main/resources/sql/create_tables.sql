@@ -18,11 +18,11 @@ CREATE TABLE project (
 alter table user
     Add column createDate timestamp;
 drop table tache;
-CREATE TABLE project_user (
-                              project_id BIGINT NOT NULL,
+CREATE TABLE projects_user (
+                              projects_id BIGINT NOT NULL,
                               user_id BIGINT NOT NULL,
-                              PRIMARY KEY (project_id, user_id),
-                              FOREIGN KEY (project_id) REFERENCES project(id),
+                              PRIMARY KEY (projects_id, user_id),
+                              FOREIGN KEY (projects_id) REFERENCES project(id),
                               FOREIGN KEY (user_id) REFERENCES user(id)
 );
 CREATE TABLE tache (

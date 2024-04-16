@@ -11,7 +11,7 @@ public class ParticipantId implements Serializable {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "project_id")
+    @Column(name = "projects_id")
     private Long projectId;
 
     public Long getUserId() {

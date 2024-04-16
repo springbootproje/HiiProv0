@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 @Entity
-@Table(name = "participe")
+@Table(name = "projects_user")
 public class ParticipantEntity implements Serializable {
 
     @EmbeddedId
@@ -17,7 +17,7 @@ public class ParticipantEntity implements Serializable {
     private UserEntity user;
 
     @ManyToOne
-    @JoinColumn(name = "project_id", insertable = false, updatable = false)
+    @JoinColumn(name = "projects_id", insertable = false, updatable = false)
     private ProjectEntity project;
 
     public ParticipantEntity() {
