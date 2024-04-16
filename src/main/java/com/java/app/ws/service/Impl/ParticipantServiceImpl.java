@@ -1,4 +1,4 @@
-package com.java.app.ws.service;
+package com.java.app.ws.service.Impl;
 
 import com.java.app.ws.Exception.ProjectNotFoundException;
 import com.java.app.ws.Exception.UserAlreadyInProjectException;
@@ -10,6 +10,7 @@ import com.java.app.ws.entity.UserEntity;
 import com.java.app.ws.repository.ParticipantRepo;
 import com.java.app.ws.repository.ProjectRepository;
 import com.java.app.ws.repository.UserRepository;
+import com.java.app.ws.service.ParticipantService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class ParticipantServiceImpl implements ParticipantService{
+public class ParticipantServiceImpl implements ParticipantService {
 
     @Autowired
     private UserRepository userRepository;

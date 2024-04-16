@@ -16,4 +16,10 @@ public interface TacheService {
      void deleteTache(Long id);
 
      TacheDto getTacheById(Long id);
+
+//Nv methode get tache by id-user
+     List<TacheDto> getTachesByUserId(Long userId);
+
+//nv ethode get tache by id-project
+     List<TacheDto> getTachesByProjectId(Long projectId);
 }

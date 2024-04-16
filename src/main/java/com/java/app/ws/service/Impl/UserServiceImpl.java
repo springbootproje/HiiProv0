@@ -1,11 +1,12 @@
 
 
-package com.java.app.ws.service;
+package com.java.app.ws.service.Impl;
 
 import com.java.app.ws.Response.LoginResponse;
 import com.java.app.ws.dto.LoginDTO;
 import com.java.app.ws.dto.UpdateUserDto;
 import com.java.app.ws.repository.LoginRepo;
+import com.java.app.ws.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;

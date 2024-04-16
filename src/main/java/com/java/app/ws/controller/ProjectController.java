@@ -3,12 +3,10 @@ package com.java.app.ws.controller;
 
 import com.java.app.ws.ApiResponse;
 import com.java.app.ws.dto.*;
-import com.java.app.ws.entity.UserEntity;
 import com.java.app.ws.repository.ProjectRepository;
 
-import com.java.app.ws.service.ProjectServiceImpl;
+import com.java.app.ws.service.Impl.ProjectServiceImpl;
 import com.java.app.ws.entity.ProjectEntity;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -17,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/project")
