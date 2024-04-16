@@ -24,11 +24,27 @@ public class TacheEntity implements Serializable{
 
     @ManyToOne
     @JoinColumn(name = "id_u")
-    private UserEntity user;//dans la classe TacheEntity permet de représenter la relation entre une tâche et l'utilisateur qui est responsable de cette tâche.
+    private UserEntity user ;//dans la classe TacheEntity permet de représenter la relation entre une tâche et l'utilisateur qui est responsable de cette tâche.
 
     @ManyToOne
     @JoinColumn(name = "id_p")
     private ProjectEntity project;
+
+    public ProjectEntity getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectEntity project) {
+        this.project = project;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
 
     public String getDescription() {
         return description;

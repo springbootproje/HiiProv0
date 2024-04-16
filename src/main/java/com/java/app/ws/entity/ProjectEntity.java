@@ -7,7 +7,9 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity(name="project")
@@ -58,7 +60,9 @@ public class ProjectEntity implements Serializable  {
     }
 
 
-
+    // Relation avec les tâches
+    @OneToMany(mappedBy = "project")
+    private List<TacheEntity> taches = new ArrayList<>();
 
 
     public Long getId() {

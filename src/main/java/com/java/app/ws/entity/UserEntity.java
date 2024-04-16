@@ -2,6 +2,7 @@ package com.java.app.ws.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +28,9 @@ joinColumns = @JoinColumn(name = "project_id"),
 private Set<ProjectEntity> assignedProjects= new HashSet<>() ;
 
 
-
+    // Relation avec les tâches
+    @OneToMany(mappedBy = "user")
+    private List<TacheEntity> taches = new ArrayList<>();
 
 
 

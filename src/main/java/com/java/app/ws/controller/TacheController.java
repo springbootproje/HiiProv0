@@ -2,9 +2,9 @@ package com.java.app.ws.controller;
 
 import com.java.app.ws.Request.TacheRequest;
 import com.java.app.ws.Response.TacheResponse;
-
 import com.java.app.ws.dto.TacheDto;
 import com.java.app.ws.service.TacheService;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,25 +21,29 @@ public class TacheController {
 
 
 	@PostMapping(value="/create")
+	public TacheResponse createTache(@RequestBody TacheRequest tacheRequest) {
+		// Récupérer userId et projectId à partir de la requête HTTP
+		Long userId = tacheRequest.getUserId();
+		Long projectId = tacheRequest.getProjectId();
 
-	public TacheResponse createTache(@RequestBody TacheRequest tacheRequest)
-	{
+		// Créer un nouvel objet TacheDto
+		TacheDto tacheDto = new TacheDto();
+		tacheDto.setDescription(tacheRequest.getDescription());
+		tacheDto.setStatut(tacheRequest.getStatut());
+		tacheDto.setUserId(userId); // Affecter userId
+		tacheDto.setProjectId(projectId); // Affecter projectId
 
-		TacheDto tacheDto =new TacheDto();
+		// Appeler la méthode createTache du service
+		TacheDto createTache = tacheService.createTache(tacheDto);
 
-		BeanUtils.copyProperties(tacheRequest,tacheDto);
-
-		 TacheDto createTache = tacheService.createTache(tacheDto);
-
-		TacheResponse tacheResponse;
-
-        tacheResponse = new TacheResponse();
-
-        BeanUtils.copyProperties(createTache,tacheResponse);
+		// Créer un objet TacheResponse et le retourner
+		TacheResponse tacheResponse = new TacheResponse();
+		BeanUtils.copyProperties(createTache, tacheResponse);
 
 		return tacheResponse;
-
 	}
+
+
 	@GetMapping(value="/get")
 	public List<TacheDto> getAllTaches() {
 		return tacheService.getAllTaches();
@@ -67,4 +71,15 @@ public class TacheController {
 		return ResponseEntity.ok("Tâche avec l'ID " + id+ " supprimée avec succès");
 	}
 
+
+	// "Nouvelle méthode pour récupérer les tâches d'un utilisateur"
+	@GetMapping(value="/user/{userId}")
+	public List<TacheDto> getTachesByUserId(@PathVariable Long userId) {
+		return tacheService.getTachesByUserId(userId);
+	}
+	//"Nouvelle méthode pour récupérer les tâches d'un projet"
+	@GetMapping(value = "/project/{projectId}")
+	public List<TacheDto> getTachesByProjectId(@PathVariable Long projectId) {
+		return tacheService.getTachesByProjectId(projectId);
+	}
 }

@@ -8,17 +8,18 @@ public class TacheRequest {
 	private String statut;
 	private String description ;
 
+	private Long projectId;
+	private Long userId;
+
 	public TacheRequest() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public TacheRequest(String statut, String description) {
-
-		
+	public TacheRequest(String statut, String description, Long userId, Long projectId) {
 		this.statut = statut;
 		this.description = description;
-
-
+		this.userId = userId;
+		this.projectId = projectId;
 	}
 
 
@@ -35,5 +36,19 @@ public class TacheRequest {
 		this.description = description;
 	}
 
+	public Long getProjectId() {
+		return projectId;
+	}
 
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 }

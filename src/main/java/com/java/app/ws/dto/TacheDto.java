@@ -7,6 +7,25 @@ public class TacheDto implements Serializable {
     private String description;
     private String statut;
 
+    private Long projectId;
+
+    private Long userId;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
 
     public String getDescription() {
         return description;
