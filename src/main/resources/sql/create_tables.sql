@@ -35,3 +35,4 @@ CREATE TABLE tache (
                        FOREIGN KEY (id_u) REFERENCES user(id),
                        FOREIGN KEY (id_p) REFERENCES project(id)
 );
+

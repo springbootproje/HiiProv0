@@ -33,15 +33,16 @@ public class ProjectEntity implements Serializable  {
 
     @ManyToMany(mappedBy = "assignedProjects")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Set<UserEntity> users= new HashSet<>() ;
+    private Set<UserEntity> members= new HashSet<>() ;
 
-    public Set<UserEntity> getUsers() {
-        return users;
+    public Set<UserEntity> getMembers() {
+        return members;
     }
 
-    public void setUsers(Set<UserEntity> users) {
-        this.users = users;
+    public void setMembers(Set<UserEntity> members) {
+        this.members = members;
     }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity creator;
