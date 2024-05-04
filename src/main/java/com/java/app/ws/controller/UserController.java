@@ -3,6 +3,7 @@ package com.java.app.ws.controller;
 import com.java.app.ws.Response.LoginResponse;
 import com.java.app.ws.dto.*;
 import com.java.app.ws.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/user")
 public class UserController {
 
@@ -30,6 +31,15 @@ public class UserController {
 	{
 		LoginResponse loginResponse = userService.loginUser(loginDTO);
 		return ResponseEntity.ok(loginResponse);
+	}
+
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request) {
+		// Assuming session management is enabled
+		request.getSession().invalidate();
+
+		// Redirect to the login page or home page after logout
+		return "redirect:/login";  // Assuming '/login' is your login page URL
 	}
 
 
