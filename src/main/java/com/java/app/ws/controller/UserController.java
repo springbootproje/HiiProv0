@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -21,11 +23,17 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@PostMapping("/new") //mzthod tested
+	@PostMapping(path = "/new") //mzthod tested
 	public ResponseEntity<?> createUser(@RequestBody CreateUserDto createUserDto) {
 		UserDto newUserDto = userService.createUser(createUserDto);
-		return ResponseEntity.ok("User created successfully with ID: " + newUserDto.getId() + ", Name: " + newUserDto.getFirstName() + " " + newUserDto.getLastName() + ", Email: " + newUserDto.getEmail());
+		Map<String, String> response = new HashMap<>();
+		response.put("message", "User created successfully");
+		response.put("id", Long.toString(newUserDto.getId()));
+		response.put("name", newUserDto.getFirstName() + " " + newUserDto.getLastName());
+		response.put("email", newUserDto.getEmail());
+		return ResponseEntity.ok(response);
 	}
+
 	@PostMapping(path = "/login")
 	public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDTO)
 	{
@@ -35,11 +43,9 @@ public class UserController {
 
 	@GetMapping("/logout")
 	public String logout(HttpServletRequest request) {
-		// Assuming session management is enabled
 		request.getSession().invalidate();
 
-		// Redirect to the login page or home page after logout
-		return "redirect:/login";  // Assuming '/login' is your login page URL
+		return "redirect:/login";
 	}
 
 
