@@ -109,7 +109,7 @@ public class ProjectServiceImpl implements ProjectService {
         projectEntity.setTitle(projectDetails.getTitle());
         projectEntity.setDescription(projectDetails.getDescription());
         // Optionally allow updating the creation date or other fields
-        // Do not update create date but you can add a field called update_date that you automatically update at this moment
+        // Do not update create datebut you can add a field called update_date that you automatically update at this moment
 
 
         return projectRepository.save(projectEntity);

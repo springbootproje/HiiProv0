@@ -20,8 +20,8 @@ public class UserEntity implements Serializable{
     private long id;
 
 @ManyToMany//ici jai ajouter many to many avec avec had lobjet pareil f projectEntity
-@JoinTable(name = "participe",
-joinColumns = @JoinColumn(name = "project_id"),
+@JoinTable(name = "projects_user",
+joinColumns = @JoinColumn(name = "projects_id"),
             inverseJoinColumns = @JoinColumn(name ="user_id" )
 )
 private Set<ProjectEntity> assignedProjects= new HashSet<>() ;

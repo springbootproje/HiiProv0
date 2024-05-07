@@ -3,13 +3,17 @@ package com.java.app.ws.controller;
 import com.java.app.ws.Response.LoginResponse;
 import com.java.app.ws.dto.*;
 import com.java.app.ws.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/user")
 public class UserController {
 
@@ -19,16 +23,29 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@PostMapping("/new") //mzthod tested
+	@PostMapping(path = "/new") //mzthod tested
 	public ResponseEntity<?> createUser(@RequestBody CreateUserDto createUserDto) {
 		UserDto newUserDto = userService.createUser(createUserDto);
-		return ResponseEntity.ok("User created successfully with ID: " + newUserDto.getId() + ", Name: " + newUserDto.getFirstName() + " " + newUserDto.getLastName() + ", Email: " + newUserDto.getEmail());
+		Map<String, String> response = new HashMap<>();
+		response.put("message", "User created successfully");
+		response.put("id", Long.toString(newUserDto.getId()));
+		response.put("name", newUserDto.getFirstName() + " " + newUserDto.getLastName());
+		response.put("email", newUserDto.getEmail());
+		return ResponseEntity.ok(response);
 	}
+
 	@PostMapping(path = "/login")
 	public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDTO)
 	{
 		LoginResponse loginResponse = userService.loginUser(loginDTO);
 		return ResponseEntity.ok(loginResponse);
+	}
+
+	@GetMapping("/logout")
+	public String logout(HttpServletRequest request) {
+		request.getSession().invalidate();
+
+		return "redirect:/login";
 	}
 
 
