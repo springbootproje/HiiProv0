@@ -1,0 +1,49 @@
+<div class="p-fluid">
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+        <div class="field">
+            <label for="title">Title</label>
+            <input id="title" type="text" pInputText formControlName="title" />
+        </div>
+
+        <div class="field">
+            <label for="description">Description</label>
+            <textarea
+                id="description"
+                pInputTextarea
+                formControlName="description"
+            ></textarea>
+        </div>
+
+        <div class="field">
+            <label for="createDate">Create Date</label>
+            <p-calendar
+                id="createDate"
+                formControlName="createDate"
+                dateFormat="yy-mm-dd"
+            ></p-calendar>
+        </div>
+
+        <div class="field">
+            <label for="creatorUserId">Creator</label>
+            <p-dropdown
+                id="creatorUserId"
+                formControlName="creatorUserId"
+                [options]="users"
+                optionLabel="name"
+            ></p-dropdown>
+        </div>
+
+        <div class="field">
+            <label for="members">Members</label>
+            <p-dropdown
+                id="members"
+                formControlName="members"
+                [options]="users"
+                optionLabel="name"
+                multiple="true"
+            ></p-dropdown>
+        </div>
+
+        <button pButton type="submit" label="Update Project"></button>
+    </form>
+</div>

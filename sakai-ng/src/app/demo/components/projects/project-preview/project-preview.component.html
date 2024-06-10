@@ -1,0 +1,92 @@
+<div class="project-preview-container">
+    <div class="action-bar">
+        <h2>{{ project?.title }}</h2>
+        <div class="button-group">
+            <input
+                pInputText
+                type="text"
+                placeholder="Search tasks..."
+                [(ngModel)]="taskSearchTerm"
+                (ngModelChange)="filterTasks()"
+                class="search-bar"
+            />
+            <button
+                pButton
+                type="button"
+                label="Filter"
+                icon="pi pi-filter"
+                class="p-button-outlined"
+            ></button>
+        </div>
+    </div>
+
+    <div class="board">
+        <div
+            *ngFor="let column of taskColumns; let i = index"
+            class="task-column"
+            [ngClass]="column.status"
+            cdkDropList
+            [cdkDropListData]="filteredTasks[column.status]"
+            (cdkDropListDropped)="onTaskDrop($event)"
+            id="cdk-drop-list-{{ i }}"
+        >
+            <div class="task-column-header" pDroppable>
+                <h3>{{ column.title }}</h3>
+                <button
+                    pButton
+                    icon="pi pi-plus"
+                    class="add-task-button"
+                    (click)="showCreateTaskDialog(column.status)"
+                >
+                    New
+                </button>
+            </div>
+            <div class="task-list">
+                <div
+                    *ngFor="let task of filteredTasks[column.status]"
+                    pDraggable
+                    class="task-card"
+                    (click)="showTaskDetails(task)"
+                >
+                    <p>{{ task.title }}</p>
+                    <button
+                        pButton
+                        type="button"
+                        icon="pi pi-ellipsis-h"
+                        class="task-button"
+                    ></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Details Dialog -->
+    <p-dialog
+        header="Task Details"
+        [(visible)]="displayTaskDetailsDialog"
+        [modal]="true"
+        [responsive]="true"
+        [style]="{ width: '30vw', 'min-height': '45vh' }"
+        [contentStyle]="{ 'overflow-y': 'auto' }"
+    >
+        <!-- Task details content here -->
+    </p-dialog>
+
+    <!-- Create Task Dialog -->
+    <p-dialog
+        header="Create Task"
+        [(visible)]="displayCreateTaskDialog"
+        [modal]="true"
+        [responsive]="true"
+        [style]="{ width: '30vw', 'min-height': '45vh' }"
+        [contentStyle]="{ 'overflow-y': 'auto' }"
+        [baseZIndex]="1000"
+    >
+        <app-task-form
+            [initialStatus]="taskStatusForNew"
+            [users]="users"
+            [statuses]="statuses"
+            (taskSubmitted)="onTaskCreated()"
+        ></app-task-form>
+    </p-dialog>
+</div>
