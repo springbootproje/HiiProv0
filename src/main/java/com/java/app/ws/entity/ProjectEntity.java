@@ -3,12 +3,12 @@ package com.java.app.ws.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 @Entity(name="project")
 public class ProjectEntity implements Serializable  {
@@ -23,18 +23,24 @@ public class ProjectEntity implements Serializable  {
     @Column(nullable=false,length=250)
     private String description;
 
-
     @Column(name = "create_date", nullable = false)
     private LocalDate createDate;
-
 
     @Column(nullable=false,length=50)
     private String title;
 
-    @ManyToMany(mappedBy = "assignedProjects")
+    @ManyToMany(mappedBy = "assignedProjects", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Set<UserEntity> members= new HashSet<>() ;
+    private Set<UserEntity> members= new HashSet<>();
 
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<TacheEntity> tasks;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity creator;
+
+    // Getters and Setters
     public Set<UserEntity> getMembers() {
         return members;
     }
@@ -43,11 +49,13 @@ public class ProjectEntity implements Serializable  {
         this.members = members;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private UserEntity creator;
+    public List<TacheEntity> getTasks() {
+        return tasks;
+    }
 
-
+    public void setTasks(List<TacheEntity> tasks) {
+        this.tasks = tasks;
+    }
 
     public UserEntity getCreator() {
         return creator;
@@ -56,10 +64,6 @@ public class ProjectEntity implements Serializable  {
     public void setCreator(UserEntity creator) {
         this.creator = creator;
     }
-
-
-
-
 
     public Long getId() {
         return id;
@@ -92,6 +96,4 @@ public class ProjectEntity implements Serializable  {
     public void setTitle(String title) {
         this.title = title;
     }
-
-
 }

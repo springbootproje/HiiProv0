@@ -1,22 +1,13 @@
 package com.java.app.ws.dto;
 
-public class TacheDto {
-    private Long id;
-    private String title;  // Added title
+public class TacheCreationDto {
+    private String title; // Added title
     private String description;
-    private String status; // Changed to match the usual naming convention
+    private String status; // Changed to match your naming convention
     private Long userId;
     private Long projectId; // Added project ID
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
     }

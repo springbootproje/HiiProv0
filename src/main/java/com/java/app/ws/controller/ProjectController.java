@@ -5,7 +5,8 @@ import com.java.app.ws.ApiResponse;
 import com.java.app.ws.dto.*;
 import com.java.app.ws.entity.UserEntity;
 import com.java.app.ws.repository.ProjectRepository;
-
+import com.java.app.ws.repository.UserRepository;
+import com.java.app.ws.security.JWTGenerator;
 import com.java.app.ws.service.ProjectServiceImpl;
 import com.java.app.ws.entity.ProjectEntity;
 import org.springframework.beans.BeanUtils;
@@ -17,16 +18,23 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/project")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProjectController {
 
 
     private final ProjectRepository projectRepository;
     private final ProjectServiceImpl projectServiceImpl;
+     @Autowired
+    private JWTGenerator jwtGenerator;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     public ProjectController(ProjectRepository projectRepository, ProjectServiceImpl projectServiceImpl) {
@@ -34,21 +42,42 @@ public class ProjectController {
         this.projectServiceImpl = projectServiceImpl;
     }
 
-    @PostMapping (path="/new")  //methos tested
-    public ResponseEntity<?> createProject(@RequestBody ProjectCreationDto projectRequest) {
-        projectServiceImpl.createProject(
-                projectRequest.getTitle(),
-                projectRequest.getDescription(),
-                projectRequest.getCreatorUserId()
-        );
-        return ResponseEntity.status(HttpStatus.CREATED).body("Projet ajouté avec succès");
+
+    @PostMapping("/new")
+    public ResponseEntity<?> createProject(@RequestBody ProjectCreationDto projectRequest,
+                                           @RequestHeader("Authorization") String token) {
+        try {
+            String jwt = token.substring(7); // Remove "Bearer " prefix
+            String username = jwtGenerator.getUsernameFromJWT(jwt); // Extract username from JWT
+
+            // Fetch user ID based on username
+            UserEntity user = userRepository.findByEmail(username)
+                    .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
+            Long creatorUserId = user.getId();
+
+            ProjectEntity project =  projectServiceImpl.createProject(
+                    projectRequest.getTitle(),
+                    projectRequest.getDescription(),
+                    creatorUserId,
+                    projectRequest.getMemberIds()
+            );
+            return ResponseEntity.ok(project);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
+        }
     }
     @GetMapping("/list")//method tested
     public ResponseEntity<List<ProjectSummaryDto>> getAllProjects() {
         List<ProjectSummaryDto> projects = projectServiceImpl.getAllProjectSummaries();
         return ResponseEntity.ok(projects); //done
     }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectSummaryDto> getProjectById(@PathVariable("id") Long projectId) {
+        ProjectSummaryDto project = projectServiceImpl.getProjectById(projectId);
+        return ResponseEntity.ok(project);
+    }
 
 
     @GetMapping("/search") //tested
@@ -73,12 +102,7 @@ public class ProjectController {
     }
 
 
-    //@GetMapping("/{id}")
-    // public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") Long projectId) {
-    //ProjectDto projectDto = projectServiceImpl.getProjectById(projectId);
 
-    // return ResponseEntity.ok(projectDto);
-    // }
 
 
 

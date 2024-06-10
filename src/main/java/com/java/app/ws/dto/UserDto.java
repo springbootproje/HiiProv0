@@ -1,14 +1,14 @@
- package com.java.app.ws.dto;
+package com.java.app.ws.dto;
 
- import jakarta.persistence.Column;
- import jakarta.persistence.Entity;
- import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 
- import java.io.Serializable;
+import java.io.Serializable;
 public class UserDto implements Serializable{
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2565811476026900613L;
 
@@ -56,4 +56,3 @@ public class UserDto implements Serializable{
 
 
 }
- 

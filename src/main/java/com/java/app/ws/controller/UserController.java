@@ -1,11 +1,19 @@
 package com.java.app.ws.controller;
 
+import com.java.app.ws.Response.AuthResponseDTO;
 import com.java.app.ws.Response.LoginResponse;
 import com.java.app.ws.dto.*;
+import com.java.app.ws.security.JWTGenerator;
 import com.java.app.ws.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,12 +26,20 @@ import java.util.Map;
 public class UserController {
 
 	private final UserService userService;
-
-	public UserController(UserService userService) {
+	private final AuthenticationManager authenticationManager;
+	private JWTGenerator jwtGenerator;
+	@Autowired
+	public UserController(UserService userService, AuthenticationManager authenticationManager,JWTGenerator jwtGenerator) {
 		this.userService = userService;
+		this.authenticationManager = authenticationManager;
+		this.jwtGenerator = jwtGenerator;
 	}
+   
 
-	@PostMapping(path = "/new") //mzthod tested
+
+
+
+	@PostMapping("/new")
 	public ResponseEntity<?> createUser(@RequestBody CreateUserDto createUserDto) {
 		UserDto newUserDto = userService.createUser(createUserDto);
 		Map<String, String> response = new HashMap<>();
@@ -34,11 +50,19 @@ public class UserController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PostMapping(path = "/login")
-	public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDTO)
+	@PostMapping("/login")
+	public ResponseEntity<AuthResponseDTO> loginUser(@RequestBody LoginDTO loginDTO)
 	{
-		LoginResponse loginResponse = userService.loginUser(loginDTO);
-		return ResponseEntity.ok(loginResponse);
+
+
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(
+						loginDTO.getEmail(),
+						loginDTO.getPassword()));
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		String token = jwtGenerator.generateToken(authentication);
+		return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
 	}
 
 	@GetMapping("/logout")
