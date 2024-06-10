@@ -1,0 +1,78 @@
+<div class="p-fluid project-form-container">
+    <p-progressSpinner
+        *ngIf="isLoading"
+        styleClass="custom-spinner"
+    ></p-progressSpinner>
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+        <div class="field">
+            <label for="title">Title</label>
+            <input
+                id="title"
+                type="text"
+                pInputText
+                formControlName="title"
+                placeholder="Enter project title"
+            />
+            <div
+                *ngIf="
+                    projectForm.controls['title'].invalid &&
+                    projectForm.controls['title'].touched
+                "
+                class="p-error"
+            >
+                Title is required.
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="description">Description</label>
+            <textarea
+                id="description"
+                pInputTextarea
+                formControlName="description"
+                placeholder="Enter project description"
+                rows="3"
+            ></textarea>
+            <div
+                *ngIf="
+                    projectForm.controls['description'].invalid &&
+                    projectForm.controls['description'].touched
+                "
+                class="p-error"
+            >
+                Description is required.
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="members">Members</label>
+            <p-multiSelect
+                id="members"
+                formControlName="members"
+                [options]="users"
+                optionLabel="label"
+                placeholder="Select project members"
+                display="chip"
+                [style]="{ 'max-width': '100%' }"
+                [panelStyle]="{ 'max-height': '200px', 'overflow-y': 'auto' }"
+                appendTo="body"
+            ></p-multiSelect>
+            <div
+                *ngIf="
+                    projectForm.controls['members'].invalid &&
+                    projectForm.controls['members'].touched
+                "
+                class="p-error"
+            >
+                Please select at least one member.
+            </div>
+        </div>
+
+        <button
+            pButton
+            type="submit"
+            label="Create Project"
+            [disabled]="projectForm.invalid || isLoading"
+        ></button>
+    </form>
+</div>

@@ -1,0 +1,98 @@
+<div class="p-fluid task-form-container">
+    <p-progressSpinner
+        *ngIf="isLoading"
+        styleClass="custom-spinner"
+    ></p-progressSpinner>
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+        <div class="field">
+            <label for="title">Title</label>
+            <input
+                id="title"
+                pInputText
+                formControlName="title"
+                placeholder="Enter task title"
+            />
+            <div
+                *ngIf="
+                    taskForm.controls['title'].invalid &&
+                    taskForm.controls['title'].touched
+                "
+                class="p-error"
+            >
+                Title is required.
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="description">Description</label>
+            <textarea
+                id="description"
+                pInputTextarea
+                formControlName="description"
+                placeholder="Enter task description"
+                rows="3"
+            ></textarea>
+            <div
+                *ngIf="
+                    taskForm.controls['description'].invalid &&
+                    taskForm.controls['description'].touched
+                "
+                class="p-error"
+            >
+                Description is required.
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="status">Status</label>
+            <p-dropdown
+                id="status"
+                formControlName="status"
+                [options]="statuses"
+                optionLabel="label"
+                placeholder="Select status"
+                [style]="{ width: '100%' }"
+                [panelStyle]="{
+                    'max-height': '200px',
+                    'overflow-y': 'auto',
+                    'z-index': '1060'
+                }"
+                appendTo="body"
+            ></p-dropdown>
+            <div
+                *ngIf="
+                    taskForm.controls['status'].invalid &&
+                    taskForm.controls['status'].touched
+                "
+                class="p-error"
+            >
+                Status is required.
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="user">Assign to</label>
+            <p-dropdown
+                id="user"
+                formControlName="user"
+                [options]="users"
+                optionLabel="label"
+                placeholder="Select user"
+                [style]="{ width: '100%' }"
+                [panelStyle]="{
+                    'max-height': '200px',
+                    'overflow-y': 'auto',
+                    'z-index': '1060'
+                }"
+                appendTo="body"
+            ></p-dropdown>
+        </div>
+
+        <button
+            pButton
+            type="submit"
+            label="Save Task"
+            [disabled]="taskForm.invalid || isLoading"
+        ></button>
+    </form>
+</div>

@@ -1,0 +1,90 @@
+// Define variables for common colors and dimensions
+$button-bg-color: #ffffff; // White background for buttons
+$button-hover-bg-color: #007bff; // Blue on hover for background
+$button-hover-text-color: #ffffff; // White text color on hover
+$button-text-color: #007bff; // Text color for buttons
+$button-border-color: #007bff;
+$gap-size: 15px;
+$card-width: calc(
+    (100% - 3 * #{$gap-size}) / 4
+); // Fixed width for four cards per row
+$card-min-width: 200px; // Minimum width for cards
+$input-width: 30%; // Adjusted width to align better with buttons
+
+// Container for the entire project list
+.project-list-container {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+
+    // Flex container for action bar
+    .action-bar {
+        display: flex;
+        justify-content: flex-end; // Align items to the right
+        align-items: center;
+        margin-bottom: 20px;
+
+        // Search bar styling
+        .p-inputtext {
+            width: $input-width;
+            margin-right: $gap-size;
+        }
+
+        // Common button styles
+        .p-button {
+            margin-left: 0; // Remove margin between buttons
+            margin-right: $gap-size;
+            background-color: $button-bg-color;
+            border-color: $button-border-color;
+            color: $button-text-color;
+
+            &:hover {
+                background-color: $button-hover-bg-color;
+                border-color: $button-hover-bg-color;
+                color: $button-hover-text-color;
+            }
+        }
+    }
+
+    // Container for project cards using flexbox
+    .project-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $gap-size; // Add spacing between cards
+        justify-content: flex-start; // Align cards to the left
+    }
+
+    // Styling for individual project card
+    .project-card {
+        width: $card-width; // Fixed width for each card
+        min-width: $card-min-width; // Ensure a minimum width for each card
+        margin-bottom: $gap-size; // Add space below each card
+    }
+
+    // Custom class to ensure the card has a fixed size
+    .p-card {
+        width: 100%; // Use the full width of the column
+    }
+
+    // Styling for members summary
+    .members-summary {
+        .members-count {
+            cursor: pointer;
+            color: $button-border-color;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+        .members-list {
+            margin-top: 10px;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+    }
+}
+
+// Tooltip styling for the members list
+.members-tooltip {
+    max-width: 200px;
+    word-wrap: break-word;
+}

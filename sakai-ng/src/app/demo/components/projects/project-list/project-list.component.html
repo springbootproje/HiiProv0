@@ -1,0 +1,96 @@
+<p-toast></p-toast>
+<div class="project-list-container">
+    <!-- Flex container for search bar, create project button, and filter button -->
+    <div class="action-bar">
+        <!-- Search bar for filtering projects -->
+        <input
+            pInputText
+            type="text"
+            placeholder="Search projects..."
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="filterProjects()"
+        />
+
+        <!-- Filter button -->
+        <button
+            pButton
+            type="button"
+            label="Filter"
+            icon="pi pi-filter"
+            class="p-button-outlined filter-button"
+        ></button>
+
+        <!-- Button to open the create project dialog -->
+        <button
+            pButton
+            type="button"
+            label="Create Project"
+            icon="pi pi-plus"
+            class="p-button-outlined create-project-button"
+            (click)="showCreateProjectDialog()"
+        ></button>
+    </div>
+
+    <!-- Create Project Dialog -->
+    <p-dialog
+        header="Create Project"
+        [(visible)]="displayCreateProjectDialog"
+        [modal]="true"
+        [responsive]="true"
+        [style]="{ width: '30vw', 'min-height': '45vh' }"
+        [contentStyle]="{ 'overflow-y': 'auto' }"
+    >
+        <app-project-form
+            (projectCreated)="onProjectCreated()"
+        ></app-project-form>
+    </p-dialog>
+
+    <!-- Display projects as cards in a responsive grid -->
+    <div class="project-cards">
+        <div *ngFor="let project of filteredProjects" class="project-card">
+            <p-card [header]="project.title" [subheader]="project.description">
+                <ng-template pTemplate="content">
+                    <p>
+                        Created on:
+                        {{ project.createDate | date : "mediumDate" }}
+                    </p>
+                    <div class="members-summary">
+                        <span
+                            class="members-count"
+                            pTooltip="{{
+                                getMembersTooltipText(project.members)
+                            }}"
+                            tooltipPosition="top"
+                        >
+                            {{ project.members.length }} members
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <button
+                        pButton
+                        type="button"
+                        label="Project Preview"
+                        icon="pi pi-eye"
+                        class="p-button-outlined"
+                        (click)="showProjectDetails(project.id)"
+                    ></button>
+                    <button
+                        pButton
+                        type="button"
+                        label="Delete"
+                        icon="pi pi-trash"
+                        class="p-button-outlined p-button-danger"
+                        (click)="confirmDeleteProject(project.id)"
+                    ></button>
+                </ng-template>
+            </p-card>
+        </div>
+    </div>
+
+    <!-- Confirmation Dialog for Deleting a Project -->
+    <p-confirmDialog
+        header="Delete Confirmation"
+        icon="pi pi-exclamation-triangle"
+    ></p-confirmDialog>
+</div>

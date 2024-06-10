@@ -1,0 +1,38 @@
+.task-form-container {
+    position: relative;
+
+    .p-progressSpinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+    }
+
+    .field {
+        margin-bottom: 1rem;
+    }
+
+    .p-dropdown {
+        width: 100%;
+
+        .p-dropdown-panel {
+            z-index: 1050 !important; // Ensure it's above the dialog
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    }
+
+    .p-error {
+        color: #f44336;
+    }
+
+    button[pButton] {
+        width: 100%;
+    }
+
+    // Ensuring dropdown panel's visibility
+    .p-dropdown-panel {
+        z-index: 1060 !important; // Even higher than the dropdown
+    }
+}
