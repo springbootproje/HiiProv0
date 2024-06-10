@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface ParticipantRepo extends JpaRepository<ParticipantEntity, Long> {
     boolean existsByUserAndProject( UserEntity user, ProjectEntity project);
     ParticipantEntity findByUserAndProject(UserEntity user, ProjectEntity project);
-
+    List<ParticipantEntity> findByProject(ProjectEntity project);
 
     Optional<ParticipantEntity> findById(ParticipantId participantId);
 

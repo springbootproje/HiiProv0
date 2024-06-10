@@ -17,7 +17,9 @@ import java.util.Set;
 
 public interface ProjectService {
     //ProjectDto createProject(ProjectCreationDto projectCreationDto);
-    ProjectEntity createProject(String title, String description, Long creatorUserId);
+    
+    ProjectEntity createProject(String title, String description, Long creatorUserId, List<Long> memberIds);
+
     List<ProjectSummaryDto> getAllProjectSummaries();
 
     List<ProjectSummaryDto> searchByTitle(String title);
