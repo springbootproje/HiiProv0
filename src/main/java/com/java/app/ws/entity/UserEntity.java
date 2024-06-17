@@ -18,12 +18,13 @@ public class UserEntity implements Serializable{
     @GeneratedValue
     @Column(nullable=false)
     private long id;
-@ManyToMany//ici jai ajouter many to many avec avec had lobjet pareil f projectEntity
-@JoinTable(name = "user_projects",
-joinColumns = @JoinColumn(name = "projects_id"),
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})//ici jai ajouter many to many avec avec had lobjet pareil f projectEntity
+    @JoinTable(name = "projects_user",
+            joinColumns = @JoinColumn(name = "projects_id"),
             inverseJoinColumns = @JoinColumn(name ="user_id" )
-)
-private Set<ProjectEntity> assignedProjects= new HashSet<>() ;
+    )
+    private Set<ProjectEntity> assignedProjects= new HashSet<>() ;
 
 
 
@@ -63,14 +64,14 @@ private Set<ProjectEntity> assignedProjects= new HashSet<>() ;
 
 
     @OneToMany
-    private List<ProjectEntity> projects;
+    private List<ProjectEntity> project;
 
-    public List<ProjectEntity> getProjects() {
-        return projects;
+    public List<ProjectEntity> getProject() {
+        return project;
     }
 
-    public void setProjects(List<ProjectEntity> projects) {
-        this.projects = projects;
+    public void setProject(List<ProjectEntity> project) {
+        this.project = project;
     }
 
     public String getFirstName() {
@@ -124,4 +125,3 @@ private Set<ProjectEntity> assignedProjects= new HashSet<>() ;
         return id;
     }
 }
- 

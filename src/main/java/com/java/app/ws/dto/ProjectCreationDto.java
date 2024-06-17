@@ -1,24 +1,13 @@
 package com.java.app.ws.dto;
 
-import com.java.app.ws.entity.UserEntity;
-
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ProjectCreationDto {
     private String title;
     private String description;
-    private Long creatorUserId; // hadou houma liste des membre normalement
+    private List<Long> memberIds; // List of member IDs to be added to the project
 
-    public Long getCreatorUserId() {
-        return creatorUserId;
-    }
-
-    public void setCreatorUserId(Long creatorUserId) {
-        this.creatorUserId = creatorUserId;
-    }
-
+    // Getters and setters
     public String getTitle() {
         return title;
     }
@@ -35,5 +24,11 @@ public class ProjectCreationDto {
         this.description = description;
     }
 
+    public List<Long> getMemberIds() {
+        return memberIds;
+    }
 
+    public void setMemberIds(List<Long> memberIds) {
+        this.memberIds = memberIds;
+    }
 }

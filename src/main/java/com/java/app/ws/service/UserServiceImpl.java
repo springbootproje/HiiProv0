@@ -18,12 +18,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 @Autowired
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+
 	@Autowired
 	private LoginRepo loginRepo;
 
@@ -31,12 +33,14 @@ public class UserServiceImpl implements UserService {
 	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
+	
 	}
 
 
 	@Override
 	public com.java.app.ws.dto.UserDto createUser(CreateUserDto createUserDto) {
 		UserEntity userEntity = new UserEntity();
+	
 		BeanUtils.copyProperties(createUserDto, userEntity);
 		userEntity.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
 		userEntity.setCreateDate(LocalDate.now());
@@ -65,7 +69,7 @@ public class UserServiceImpl implements UserService {
 
 				return new LoginResponse("Password Not Match", false);
 			}
-		} else {
+		}     else {
 
 			return new LoginResponse("Email not exists", false);
 		}

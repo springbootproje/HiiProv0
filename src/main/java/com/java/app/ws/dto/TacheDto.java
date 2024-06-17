@@ -1,12 +1,29 @@
 package com.java.app.ws.dto;
 
-import java.io.Serializable;
-
-public class TacheDto implements Serializable {
+public class TacheDto {
     private Long id;
+    private String title;  // Added title
     private String description;
-    private String statut;
+    private String status; // Changed to match the usual naming convention
+    private Long userId;
+    private Long projectId; // Added project ID
 
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getDescription() {
         return description;
@@ -16,23 +33,27 @@ public class TacheDto implements Serializable {
         this.description = description;
     }
 
-    public Long getId() {
-        return id;
+    public String getStatus() { // Ensure this matches the property name 'status'
+        return status;
     }
 
-
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public String getStatut() {
-        return statut;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setStatut(String statut) {
-        this.statut = statut;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
+    public Long getProjectId() {
+        return projectId;
+    }
 
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
 }

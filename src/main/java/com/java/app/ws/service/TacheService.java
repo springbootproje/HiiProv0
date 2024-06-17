@@ -1,5 +1,6 @@
 package com.java.app.ws.service;
 
+import com.java.app.ws.dto.TacheCreationDto;
 import com.java.app.ws.dto.TacheDto;
 import org.springframework.stereotype.Service;
 
@@ -7,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface TacheService {
-     TacheDto createTache(TacheDto tacheDto);
+     TacheDto createTache(TacheCreationDto tacheCreationDto);
 
      List<TacheDto> getAllTaches();
 
