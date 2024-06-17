@@ -2,13 +2,20 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Product } from '../../api/product';
 import { ProductService } from '../../service/product.service';
-import { Subscription, debounceTime } from 'rxjs';
+import {Subscription, debounceTime, Subject, tap, takeUntil, switchMap, of, Observable, lastValueFrom} from 'rxjs';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import {ProjectService} from "../../../services/project.service";
+import {ProjectSummaryDto, TaskDto} from "../projects/project.model";
+import {catchError} from "rxjs/operators";
+import { Router } from '@angular/router';
+import {UserDto} from "../../../interfaces/user-dto";
 
 @Component({
     templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+    projects: ProjectSummaryDto[] = [];// Liste des projets
+
     items!: MenuItem[];
 
     products!: Product[];
@@ -18,57 +25,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
     chartOptions: any;
 
     subscription!: Subscription;
+    tasks:TaskDto[];
 
-    tasks = [
-        {
-            name: 'Update project plan',
-            status: 'In Progress',
-            priority: 'High',
-            dueDate: new Date(2024, 4, 25),
-        },
-        {
-            name: 'Review design specs',
-            status: 'Pending',
-            priority: 'Medium',
-            dueDate: new Date(2024, 4, 27),
-        },
-        {
-            name: 'Deploy new version',
-            status: 'Completed',
-            priority: 'Low',
-            dueDate: new Date(2024, 4, 20),
-        },
-        {
-            name: 'Fix security issues',
-            status: 'In Progress',
-            priority: 'Critical',
-            dueDate: new Date(2024, 4, 30),
-        },
-        // More tasks...
-    ];
-    projects = [
-        {
-            name: 'Project Alpha',
-            status: 'Active',
-            progress: 70,
-            deadline: new Date(2024, 11, 25),
-        },
-        {
-            name: 'Project Beta',
-            status: 'Planning',
-            progress: 20,
-            deadline: new Date(2024, 12, 15),
-        },
+    activeProjects: number = 0; // To store the count of active projects
 
-        // Add more projects as needed
-    ];
+    newProjects: number = 0; // Placeholder for new projects count
+    teamMembers: any[] = []; // Array to hold team members data
+    maxUsersInAnyProject: number = 0; // Maximum number of users in any project
+    newTeamMembers: number = 0; // Number of new team members this month
+    resourceUtilization: number = 0; // To store the current resource utilization percentage
+    utilizationChange: number = 0; // To store the change in resource utilization
+    totalCompletedTasks: number = 0; // Nombre total de tâches terminées
+    uniqueMembers: UserDto[] = []; // Liste des membres uniques à travers tous les projets
+
+
+    private destroy$ = new Subject<void>(); // Used for unsubscribing
+
 
     recentActivities: any[];
 
     constructor(
         private productService: ProductService,
-        public layoutService: LayoutService
-    ) {
+        public layoutService: LayoutService,
+    private projectService: ProjectService,
+
+) {
         this.subscription = this.layoutService.configUpdate$
             .pipe(debounceTime(25))
             .subscribe((config) => {
@@ -78,6 +59,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.initChart();
+        this.loadActiveProjects(); // Load active projects on init
+        this.loadTeamMembers(); // Load team members data
+        this.loadResourceUtilization();
+
+        this.loadProjects();
+
         this.productService
             .getProductsSmall()
             .then((data) => (this.products = data));
@@ -102,7 +89,144 @@ export class DashboardComponent implements OnInit, OnDestroy {
                 date: new Date(new Date().setDate(new Date().getDate() - 4)),
             },
         ];
+
     }
+
+
+
+
+    // Fetch the list of projects and count them as active
+    loadActiveProjects() {
+        this.projectService.getProjects().pipe(
+            tap((projects: ProjectSummaryDto[]) => {
+                this.activeProjects = projects.length; // All projects are considered active
+                this.newProjects = this.calculateNewProjects(projects); // Calculate new projects since last week
+            }),
+            catchError(error => {
+                console.error('Error fetching projects', error);
+                // Return an empty array to continue the stream in case of error
+                return [];
+            }),
+            takeUntil(this.destroy$) // Automatically unsubscribe when component is destroyed
+        ).subscribe(); // Only to trigger the observable
+    }
+    loadProjects() {
+        this.projectService.getProjects().pipe(
+            tap((projects: ProjectSummaryDto[]) => {
+                console.log(projects); // Vérifiez ici les données des projets
+
+                this.projects = projects;
+
+
+            }),
+            catchError(error => {
+                console.error('Erreur lors de la récupération des projets', error);
+                return of([]); // Retourne un tableau vide en cas d'erreur
+            }),
+            takeUntil(this.destroy$)
+        ).subscribe();
+    }
+
+
+
+
+
+
+    // Function to calculate the number of new projects since last week
+    calculateNewProjects(projects: ProjectSummaryDto[]): number {
+        const today = new Date();
+        const oneWeekAgo = new Date(today);
+        oneWeekAgo.setDate(today.getDate() - 7);
+
+        const newProjects = projects.filter(project => {
+            const projectCreateDate = new Date(project.createDate);
+            return projectCreateDate >= oneWeekAgo;
+        });
+
+        return newProjects.length;
+    }
+    loadTeamMembers() {
+        this.projectService.getProjects().pipe(
+            tap((projects: ProjectSummaryDto[]) => {
+                // Calculate the maximum number of users in any project
+                this.maxUsersInAnyProject = Math.max(...projects.map(project => project.members.length), 0);
+
+                // Calculate the number of new team members this month
+                this.newTeamMembers = this.calculateNewTeamMembers(projects);
+
+                // Log the results to ensure correctness
+                console.log(`Maximum users in any project: ${this.maxUsersInAnyProject}`);
+                console.log(`New team members this month: ${this.newTeamMembers}`);
+            }),
+            catchError(error => {
+                console.error('Error fetching team members', error);
+                return [];
+            }),
+            takeUntil(this.destroy$) // Automatically unsubscribe when component is destroyed
+        ).subscribe(); // Only to trigger the observable
+    }
+
+
+    // Function to calculate the number of new team members this month
+
+
+    calculateNewTeamMembers(projects: ProjectSummaryDto[]): number {
+        const currentMonth = new Date().getMonth(); // Get current month
+        const currentYear = new Date().getFullYear(); // Get current year
+        let newMembersCount = 0;
+
+        projects.forEach(project => {
+            const projectCreateDate = new Date(project.createDate);
+            if (projectCreateDate.getMonth() === currentMonth && projectCreateDate.getFullYear() === currentYear) {
+                newMembersCount += project.members.length;
+            }
+        });
+
+        return newMembersCount;
+    }
+
+
+    getPreviousUtilization(): Observable<number> {
+        const previousUtilization = localStorage.getItem('previousUtilization');
+        return previousUtilization ? of(Number(previousUtilization)) : of(65); // Default value
+    }
+
+    storeCurrentUtilization(currentUtilization: number) {
+        localStorage.setItem('previousUtilization', currentUtilization.toFixed(2));
+    }
+
+    loadResourceUtilization() {
+        this.projectService.getProjects().pipe(
+            tap((projects: ProjectSummaryDto[]) => {
+                console.log('Projects:', projects);
+
+                this.totalCompletedTasks = projects.reduce((sum, project) => {
+                    return sum + project.tasks.filter(task => task.status === 'done').length;
+                }, 0);
+
+                console.log('Total Completed Tasks:', this.totalCompletedTasks);
+
+                const totalTasks = projects.reduce((sum, project) => sum + project.tasks.length, 0);
+                this.resourceUtilization = totalTasks > 0 ? (this.totalCompletedTasks / totalTasks) * 100 : 0;
+
+                console.log(`Resource Utilization: ${this.resourceUtilization}%`);
+
+                this.storeCurrentUtilization(this.resourceUtilization);
+            }),
+            switchMap(() => this.getPreviousUtilization()),
+            tap((previousUtilization: number) => {
+                this.utilizationChange = this.resourceUtilization - previousUtilization;
+                console.log(`Utilization Change: ${this.utilizationChange}%`);
+            }),
+            catchError(error => {
+                console.error('Error fetching resource utilization data', error);
+                return of([]);
+            }),
+            takeUntil(this.destroy$)
+        ).subscribe();
+    }
+
+
 
     initChart() {
         const documentStyle = getComputedStyle(document.documentElement);

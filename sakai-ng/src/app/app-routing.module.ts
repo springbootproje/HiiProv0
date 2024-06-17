@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { NotfoundComponent } from './demo/components/notfound/notfound.component';
 import { AppLayoutComponent } from './layout/app.layout.component';
 import { authGuard } from './demo/components/auth/auth-guard.component';
+import {ProjectPreviewComponent} from "./demo/components/projects/project-preview/project-preview.component";
+import {DashboardComponent} from "./demo/components/dashboard/dashboard.component";
 
 @NgModule({
     imports: [
@@ -68,6 +70,7 @@ import { authGuard } from './demo/components/auth/auth-guard.component';
                                 ).then((m) => m.ProjectModule),
                             canActivate: [authGuard],
                         },
+
                     ],
                 },
                 {

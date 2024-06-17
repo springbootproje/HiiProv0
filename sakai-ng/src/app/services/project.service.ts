@@ -5,7 +5,7 @@ import {
     ProjectCreationDto,
     ProjectSummaryDto,
     ProjectEntity,
-    ApiResponse,
+    ApiResponse, TaskDto,
 } from '../demo/components/projects/project.model';
 
 @Injectable({

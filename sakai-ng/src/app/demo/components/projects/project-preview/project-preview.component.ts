@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectService } from 'src/app/services/project.service';
+
 import { TaskService } from 'src/app/services/task.service';
 import { ProjectSummaryDto, TaskDto } from '../project.model';
+
 import {
     CdkDragDrop,
     moveItemInArray,
@@ -48,12 +50,15 @@ export class ProjectPreviewComponent implements OnInit {
         private projectService: ProjectService,
         private taskService: TaskService,
         private messageService: MessageService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+
     ) {}
 
     ngOnInit(): void {
         this.loadProject();
+
     }
+
 
     loadProject(): void {
         const projectId = this.getProjectIdFromRoute();

@@ -16,12 +16,14 @@ import { EventService } from './demo/service/event.service';
 import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
+
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { AuthInterceptor } from './demo/components/auth/auth-interceptor.components';
+
 @NgModule({
-    declarations: [AppComponent, NotfoundComponent],
+    declarations: [AppComponent, NotfoundComponent,],
     imports: [AppRoutingModule, AppLayoutModule, ToastModule],
     providers: [
         { provide: LocationStrategy, useClass: PathLocationStrategy },
