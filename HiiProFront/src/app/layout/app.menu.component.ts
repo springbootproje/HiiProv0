@@ -84,6 +84,7 @@ export class AppMenuComponent implements OnInit {
                         label: 'Configuration du système', // System configuration
                         icon: 'pi pi-fw pi-sliders-h',
                         routerLink: ['/settings/systemconfig'],
+                        //fdf
                     },
 
 
