@@ -75,7 +75,24 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Override
+	public void changePassword(String email, String currentPassword, String newPassword) {
+		Optional<UserEntity> userOptional = userRepository.findByEmail(email);
+		if (userOptional.isPresent()) {
+			UserEntity user = userOptional.get();
 
+			// Vérifier que le mot de passe actuel est correct
+			if (passwordEncoder.matches(currentPassword, user.getPassword())) {
+				// Encoder le nouveau mot de passe
+				user.setPassword(passwordEncoder.encode(newPassword));
+				userRepository.save(user); // Sauvegarder les changements
+			} else {
+				throw new RuntimeException("Current password is incorrect");
+			}
+		} else {
+			throw new RuntimeException("User not found");
+		}
+	}
 	@Override
 	public List<com.java.app.ws.dto.UserDto> getAllUsers() {
 		List<UserEntity> userEntityList = userRepository.findAll();

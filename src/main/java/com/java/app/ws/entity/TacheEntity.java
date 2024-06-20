@@ -18,7 +18,7 @@ public class TacheEntity implements Serializable {
 
     @Column(name = "title", length = 100, nullable = false) // Add title column
     private String title;
-    @Column(name = "dateCreation",nullable = false) // Correction de l'annotation pour dateCreation
+    @Column(name = "dateCreation",length=100) // Correction de l'annotation pour dateCreation
     private LocalDate dateCreation;
 
     @Column(name = "description", length = 250) // Increase length for better descriptions

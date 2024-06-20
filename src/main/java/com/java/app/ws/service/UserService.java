@@ -10,6 +10,8 @@ import java.util.List;
 
 public interface UserService {
     UserDto createUser(CreateUserDto createUserDto);
+    void changePassword(String email, String currentPassword, String newPassword);
+
     List<UserDto> getAllUsers();
     UserDto getUserById(Long id);
 

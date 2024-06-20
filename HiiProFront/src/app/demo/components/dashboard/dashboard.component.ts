@@ -392,5 +392,5 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
 
-
+    protected readonly Date = Date;
 }
