@@ -4,19 +4,22 @@
             <div class="flex justify-content-between mb-3">
                 <div>
                     <span class="block text-500 font-medium mb-3"
-                        >Active Projects</span
+                    >Active Projects</span
                     >
-                    <div class="text-900 font-medium text-xl">{{ activeProjects }}</div>
+                    <div class="text-900 font-medium text-xl">
+                        {{ activeProjects }}
+                    </div>
                 </div>
                 <div
                     class="flex align-items-center justify-content-center bg-blue-100 border-round"
                     [ngStyle]="{ width: '2.5rem', height: '2.5rem' }"
-
                 >
                     <i class="pi pi-folder-open text-blue-500 text-xl"></i>
                 </div>
             </div>
-            <span class="text-green-500 font-medium">{{ newProjects }} new </span>
+            <span class="text-green-500 font-medium"
+            >{{ newProjects }} new
+            </span>
             <span class="text-500">since last week</span>
         </div>
     </div>
@@ -25,9 +28,9 @@
             <div class="flex justify-content-between mb-3">
                 <div>
                     <span class="block text-500 font-medium mb-3"
-                        >Pending Tasks</span
+                    >Pending Task</span
                     >
-                    <div class="text-900 font-medium text-xl">35</div>
+                    <div class="text-900 font-medium text-xl">{{ pendingTasksCount }}</div>
                 </div>
                 <div
                     class="flex align-items-center justify-content-center bg-orange-100 border-round"
@@ -36,8 +39,8 @@
                     <i class="pi pi-clock text-orange-500 text-xl"></i>
                 </div>
             </div>
-            <span class="text-orange-500 font-medium">5 urgent</span>
-            <span class="text-500">tasks</span>
+            <span class="text-orange-500 font-medium">{{ pendingTasksCount }} pending </span>
+            <span class="text-500"> tasks</span>
         </div>
     </div>
     <div class="col-12 lg:col-6 xl:col-3">
@@ -45,9 +48,11 @@
             <div class="flex justify-content-between mb-3">
                 <div>
                     <span class="block text-500 font-medium mb-3"
-                        >Team Members</span
+                    >Team Members</span
                     >
-                    <div class="text-900 font-medium text-xl">{{ maxUsersInAnyProject }}</div>
+                    <div class="text-900 font-medium text-xl">
+                        {{ maxUsersInAnyProject }}
+                    </div>
                 </div>
                 <div
                     class="flex align-items-center justify-content-center bg-cyan-100 border-round"
@@ -56,7 +61,9 @@
                     <i class="pi pi-users text-cyan-500 text-xl"></i>
                 </div>
             </div>
-            <span class="text-green-500 font-medium"> {{ newTeamMembers }}  member </span>
+            <span class="text-green-500 font-medium">
+                {{ newTeamMembers }} member
+            </span>
             <span class="text-500">in all projects</span>
         </div>
     </div>
@@ -65,9 +72,11 @@
             <div class="flex justify-content-between mb-3">
                 <div>
                     <span class="block text-500 font-medium mb-3"
-                        >Resource Utilization</span
+                    >Resource Utilization</span
                     >
-                    <div class="text-900 font-medium text-xl">{{ totalCompletedTasks }} tasks done</div>
+                    <div class="text-900 font-medium text-xl">
+                        {{ totalCompletedTasks }} tasks done
+                    </div>
                 </div>
                 <div
                     class="flex align-items-center justify-content-center bg-purple-100 border-round"
@@ -76,8 +85,16 @@
                     <i class="pi pi-chart-line text-purple-500 text-xl"></i>
                 </div>
             </div>
-            <span class="text-green-500 font-medium"> {{ utilizationChange >= 0 ? utilizationChange.toFixed(2) + '%' : utilizationChange.toFixed(2).slice(1) + '%' }} </span>
-            <span class="text-500">{{ utilizationChange >= 0 ? 'increase' : 'decrease' }}</span>
+            <span class="text-green-500 font-medium">
+                {{
+                    utilizationChange >= 0
+                        ? utilizationChange.toFixed(2) + "%"
+                        : utilizationChange.toFixed(2).slice(1) + "%"
+                }}
+            </span>
+            <span class="text-500">{{
+                    utilizationChange >= 0 ? "increase" : "decrease"
+                }}</span>
         </div>
     </div>
 </div>
@@ -89,28 +106,30 @@
             <p-table
                 [value]="tasks"
                 [paginator]="true"
-                [rows]="10"
+                [rows]="4"
                 responsiveLayout="scroll"
             >
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Task</th>
                         <th>Status</th>
-                        <th>Priority</th>
+
                         <th>Due Date</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-task>
                     <tr>
-                        <td>{{ task.name }}</td>
+                        <td>{{ task.title }}</td>
                         <td>{{ task.status }}</td>
-                        <td>{{ task.priority }}</td>
-                        <td>{{ task.dueDate | date }}</td>
+
+                        <!-- Add default if priority is missing -->
+                        <td>{{ task.dateCreation | date }}</td>
                     </tr>
                 </ng-template>
             </p-table>
         </div>
     </div>
+
     <!-- You can place additional content or widgets here -->
     <div class="col-12 xl:col-6">
         <div class="card">
@@ -118,7 +137,7 @@
             <p-table
                 [value]="uniqueMembers"
                 [paginator]="true"
-                rows="5"
+                [rows]="4"
                 responsiveLayout="stack"
             >
                 <ng-template pTemplate="header">
@@ -127,50 +146,52 @@
                         <th>Last Name</th>
                     </tr>
                 </ng-template>
-                <ng-template pTemplate="body" let-activity>
+                <ng-template pTemplate="body" let-member>
                     <tr>
-                        <td>{{member.firstName }}</td>
-                        <td>{{member.lastName }}</td>
+                        <td>{{ member.firstName }}</td>
+                        <td>{{ member.lastName }}</td>
                     </tr>
                 </ng-template>
             </p-table>
         </div>
     </div>
-<div class="col-12">
-    <div class="card">
-        <h5>Project List</h5>
-        <p-table
-            [value]="projects"
-            [paginator]="true"
-            [rows]="10"
-            [responsiveLayout]="'scroll'"
-        >
-            <ng-template pTemplate="header">
-                <tr>
-                    <th pSortableColumn="name">
-                        Project Name <p-sortIcon field="title"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="description">
-                        Description <p-sortIcon field="description"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="members">
-                        members <p-sortIcon field="members"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="createDate">
-                        creation date  <p-sortIcon field="createDate"></p-sortIcon>
-                    </th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-project>
-                <tr>
-                    <td>{{ project.title }}</td>
-                    <td>{{ project.description }}</td>
-                    <td>{{ project.members.length }}</td>
-                    <td>{{  project.createDate | date:'mediumDate'}}</td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </div>
-</div>
 
+    <div class="col-12">
+        <div class="card">
+            <h5>Project List</h5>
+            <p-table
+                [value]="projects"
+                [paginator]="true"
+                [rows]="4"
+                [responsiveLayout]="'scroll'"
+            >
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="name">
+                            Project Name <p-sortIcon field="title"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="description">
+                            Description
+                            <p-sortIcon field="description"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="members">
+                            members <p-sortIcon field="members"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="createDate">
+                            creation date
+                            <p-sortIcon field="createDate"></p-sortIcon>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-project>
+                    <tr>
+                        <td>{{ project.title }}</td>
+                        <td>{{ project.description }}</td>
+                        <td>{{ project.members.length }}</td>
+                        <td>{{ project.createDate | date : "mediumDate" }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
 </div>

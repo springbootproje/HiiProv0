@@ -22,22 +22,8 @@ import {DashboardComponent} from "./demo/components/dashboard/dashboard.componen
                                 ).then((m) => m.DashboardModule),
                             canActivate: [authGuard],
                         },
-                        {
-                            path: 'uikit',
-                            loadChildren: () =>
-                                import(
-                                    './demo/components/uikit/uikit.module'
-                                ).then((m) => m.UIkitModule),
-                            canActivate: [authGuard],
-                        },
-                        {
-                            path: 'utilities',
-                            loadChildren: () =>
-                                import(
-                                    './demo/components/utilities/utilities.module'
-                                ).then((m) => m.UtilitiesModule),
-                            canActivate: [authGuard],
-                        },
+
+
                         {
                             path: 'documentation',
                             loadChildren: () =>

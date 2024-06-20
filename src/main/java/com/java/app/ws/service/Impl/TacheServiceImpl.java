@@ -37,6 +37,8 @@ public TacheDto createTache(TacheCreationDto tacheCreationDto) {
     tacheEntity.setTitle(tacheCreationDto.getTitle());
     tacheEntity.setDescription(tacheCreationDto.getDescription());
     tacheEntity.setStatut(tacheCreationDto.getStatus());
+    tacheEntity.setDateCreation(tacheCreationDto.getDateCreation());
+
 
     // Set the user if provided
     if (tacheCreationDto.getUserId() != null) {
@@ -69,6 +71,8 @@ public TacheDto createTache(TacheCreationDto tacheCreationDto) {
     tacheDto.setStatus(newTache.getStatut());
     tacheDto.setUserId(newTache.getUser() != null ? newTache.getUser().getId() : null);
     tacheDto.setProjectId(newTache.getProject().getId());
+    tacheDto.setDateCreation(newTache.getDateCreation());
+
 
     return tacheDto;
 }

@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -30,7 +31,7 @@ public class ProjectController {
 
     private final ProjectRepository projectRepository;
     private final ProjectServiceImpl projectServiceImpl;
-     @Autowired
+    @Autowired
     private JWTGenerator jwtGenerator;
 
     @Autowired
@@ -42,6 +43,15 @@ public class ProjectController {
         this.projectServiceImpl = projectServiceImpl;
     }
 
+    // @PostMapping (path="/new")  //methos tested
+    // public ResponseEntity<?> createProject(@RequestBody ProjectCreationDto projectRequest) {
+    //     projectServiceImpl.createProject(
+    //             projectRequest.getTitle(),
+    //             projectRequest.getDescription(),
+    //             projectRequest.getCreatorUserId(), projectRequest.getMemberIds()
+    //     );
+    //     return ResponseEntity.status(HttpStatus.CREATED).body("Projet ajouté avec succès");
+    // }
 
     @PostMapping("/new")
     public ResponseEntity<?> createProject(@RequestBody ProjectCreationDto projectRequest,
@@ -68,10 +78,26 @@ public class ProjectController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
         }
     }
-    @GetMapping("/list")//method tested
-    public ResponseEntity<List<ProjectSummaryDto>> getAllProjects() {
-        List<ProjectSummaryDto> projects = projectServiceImpl.getAllProjectSummaries();
-        return ResponseEntity.ok(projects); //done
+    @GetMapping("/list")
+    public ResponseEntity<List<ProjectSummaryDto>> getAllProjects(@RequestHeader("Authorization") String token) {
+        try {
+            String jwt = token.substring(7); // Remove "Bearer " prefix
+            String username = jwtGenerator.getUsernameFromJWT(jwt); // Extract username from JWT
+
+            // Fetch user ID based on username
+            UserEntity user = userRepository.findByEmail(username)
+                    .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
+            Long currentUserId = user.getId();
+
+            // Get filtered project summaries based on the current user
+            List<ProjectSummaryDto> projects = projectServiceImpl.getProjectSummariesByUser(currentUserId);
+
+            return ResponseEntity.ok(projects);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.emptyList());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+        }
     }
     @GetMapping("/{id}")
     public ResponseEntity<ProjectSummaryDto> getProjectById(@PathVariable("id") Long projectId) {
@@ -102,7 +128,12 @@ public class ProjectController {
     }
 
 
+    //@GetMapping("/{id}")
+    // public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") Long projectId) {
+    //ProjectDto projectDto = projectServiceImpl.getProjectById(projectId);
 
+    // return ResponseEntity.ok(projectDto);
+    // }
 
 
 
@@ -141,12 +172,12 @@ public class ProjectController {
 
 
     //@DeleteMapping("/{projectId}/remove-from-user/{userId}")
-   // public ResponseEntity<Void> removeProjectFromUser(
-         //   @PathVariable Long projectId,
-          //  @PathVariable Long userId) {
-       // projectServiceImpl.removeProjectFromUser(projectId, userId);
-      //  return ResponseEntity.ok().build();
-   // }
+    // public ResponseEntity<Void> removeProjectFromUser(
+    //   @PathVariable Long projectId,
+    //  @PathVariable Long userId) {
+    // projectServiceImpl.removeProjectFromUser(projectId, userId);
+    //  return ResponseEntity.ok().build();
+    // }
 
     // @GetMapping("/searchText")
     // public ResponseEntity<List<ProjectEntity>> searchProjects(@RequestParam String keyword) {
@@ -154,11 +185,11 @@ public class ProjectController {
     // return ResponseEntity.ok(projects);
     // }
     //@PutMapping("/{projectId}/transfer")
-   // public ResponseEntity<ProjectEntity> transferProjectToAnotherUser(
-            //@PathVariable Long projectId,
-           // @RequestParam Long newOwnerId) {
-       // ProjectEntity updatedProject = projectServiceImpl.transferProjectToAnotherUser(projectId, newOwnerId);
-        //return ResponseEntity.ok(updatedProject);
-   // }
+    // public ResponseEntity<ProjectEntity> transferProjectToAnotherUser(
+    //@PathVariable Long projectId,
+    // @RequestParam Long newOwnerId) {
+    // ProjectEntity updatedProject = projectServiceImpl.transferProjectToAnotherUser(projectId, newOwnerId);
+    //return ResponseEntity.ok(updatedProject);
+    // }
 
 }

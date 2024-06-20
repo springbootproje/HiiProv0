@@ -17,7 +17,7 @@ import java.util.Set;
 
 public interface ProjectService {
     //ProjectDto createProject(ProjectCreationDto projectCreationDto);
-    
+
     ProjectEntity createProject(String title, String description, Long creatorUserId, List<Long> memberIds);
 
     List<ProjectSummaryDto> getAllProjectSummaries();
@@ -27,7 +27,7 @@ public interface ProjectService {
     void deleteProject(Long id);
 
     List<ProjectDto> getProjectsFromStartDate(LocalDate date);
-
+    List<ProjectSummaryDto> getProjectSummariesByUser(Long userId);
 
 
 
@@ -44,14 +44,14 @@ public interface ProjectService {
 //hadou li lteht mazal mandirhoum
 
     //ProjectDto getProjectById(Long id);
-   // List<ProjectEntity> getAllProjects();
+    // List<ProjectEntity> getAllProjects();
 
 
 
-   // List<ProjectEntity> searchProjects(String keyword);
-   // List<ProjectEntity> findAllProjectsByUserId(Long userId);
+    // List<ProjectEntity> searchProjects(String keyword);
+    // List<ProjectEntity> findAllProjectsByUserId(Long userId);
 
-   // void deleteUsersProject(Long projectId, Long userId);
+    // void deleteUsersProject(Long projectId, Long userId);
 
     //ProjectEntity transferProjectToAnotherUser(Long projectId, Long newOwnerId);
 

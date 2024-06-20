@@ -37,6 +37,7 @@ export interface TaskDto {
     status: string;
     userId: number;
     projactId: number;
+    dateCreation:string;
     // Other task properties as needed
 }
 
@@ -44,6 +45,7 @@ export interface TaskCreationDto {
     title: string;
     description: string;
     status: string; // Adjust the type if necessary
-    userId?: number;
+    userId: number;
     projectId: number; // Include the projectId here
+
 }

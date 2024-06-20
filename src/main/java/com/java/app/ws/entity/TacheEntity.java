@@ -2,6 +2,8 @@ package com.java.app.ws.entity;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "tache")
@@ -16,6 +18,8 @@ public class TacheEntity implements Serializable {
 
     @Column(name = "title", length = 100, nullable = false) // Add title column
     private String title;
+    @Column(name = "dateCreation",nullable = false) // Correction de l'annotation pour dateCreation
+    private LocalDate dateCreation;
 
     @Column(name = "description", length = 250) // Increase length for better descriptions
     private String description;
@@ -78,5 +82,13 @@ public class TacheEntity implements Serializable {
 
     public void setProject(ProjectEntity project) {
         this.project = project;
+    }
+
+    public LocalDate getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(LocalDate dateCreation) {
+        this.dateCreation = dateCreation;
     }
 }

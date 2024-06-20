@@ -42,6 +42,7 @@ export class TaskFormComponent implements OnInit {
             const taskData: TaskCreationDto = {
                 title: this.taskForm.value.title,
                 description: this.taskForm.value.description,
+
                 status: this.taskForm.value.status.value, // Extract the 'value' of status
                 userId: this.taskForm.value.user?.value || null, // Extract the 'value' of user or set to null if not assigned
                 projectId: +this.route.snapshot.paramMap.get('id')!, // Include the projectId
