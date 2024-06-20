@@ -1,4 +1,6 @@
+<!-- Container principal pour l'aperçu du projet -->
 <div class="project-preview-container">
+    <!-- Barre d'action en haut de la page -->
     <div class="action-bar">
         <h2>{{ project?.title }}</h2>
         <div class="button-group">
@@ -20,7 +22,9 @@
         </div>
     </div>
 
+    <!-- Tableau des colonnes de tâches -->
     <div class="board">
+        <!-- Itération sur chaque colonne de tâches -->
         <div
             *ngFor="let column of taskColumns; let i = index"
             class="task-column"
@@ -30,7 +34,8 @@
             (cdkDropListDropped)="onTaskDrop($event)"
             id="cdk-drop-list-{{ i }}"
         >
-            <div class="task-column-header" pDroppable>
+            <!-- En-tête de chaque colonne de tâches -->
+            <div class="task-column-header">
                 <h3>{{ column.title }}</h3>
                 <button
                     pButton
@@ -41,47 +46,94 @@
                     New
                 </button>
             </div>
+            <!-- Liste des tâches dans chaque colonne -->
             <div class="task-list">
                 <div
                     *ngFor="let task of filteredTasks[column.status]"
-                    pDraggable
+                    cdkDrag
                     class="task-card"
-                    (click)="showTaskDetails(task)"
                 >
-                    <p>{{ task.title }}</p>
-                    <button
-                        pButton
-                        type="button"
-                        icon="pi pi-ellipsis-h"
-                        class="task-button"
-                    ></button>
+                    <!-- Titre de la tâche avec icônes d'édition et de suppression -->
+                    <div class="task-header">
+                        <p class="task-title">{{ task.title }}</p>
+                        <div class="task-actions">
+                            <button
+                                pButton
+                                type="button"
+                                icon="pi pi-ellipsis-h"
+                                class="task-button edit-button"
+                                (click)="showTaskDetails(task)"
+                            ></button>
+                            <button
+                                pButton
+                                type="button"
+                                icon="pi pi-trash"
+                                class="task-button delete-button"
+                                (click)="deleteTask(task.id)"
+                            ></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Task Details Dialog -->
+    <!-- Edit Task Dialog -->
     <p-dialog
-        header="Task Details"
+        header="Edit Task"
         [(visible)]="displayTaskDetailsDialog"
         [modal]="true"
-        [responsive]="true"
         [style]="{ width: '30vw', 'min-height': '45vh' }"
         [contentStyle]="{ 'overflow-y': 'auto' }"
     >
-        <!-- Task details content here -->
+        <!-- Formulaire pour l'édition des tâches -->
+        <form [formGroup]="taskEditForm" (ngSubmit)="updateTask()">
+            <div class="p-field">
+                <label for="title">Title</label>
+                <input id="title" pInputText formControlName="title" class="form-control" />
+            </div>
+            <div class="p-field">
+                <label for="description">Description</label>
+                <textarea id="description" pInputTextarea formControlName="description" class="form-control"></textarea>
+            </div>
+            <div class="p-field">
+                <label for="status">Status</label>
+                <p-dropdown
+                    id="status"
+                    [options]="statuses"
+                    formControlName="status"
+                    optionLabel="label"
+                    optionValue="value"
+                    class="form-control"
+                ></p-dropdown>
+            </div>
+            <div class="p-field">
+                <label for="userId">Assign to</label>
+                <p-dropdown
+                    id="userId"
+                    [options]="users"
+                    formControlName="userId"
+                    optionLabel="label"
+                    optionValue="value"
+                    class="form-control"
+                ></p-dropdown>
+            </div>
+            <div class="p-dialog-footer">
+                <button pButton type="submit" label="Save Changes" class="p-button-primary"></button>
+            </div>
+        </form>
     </p-dialog>
 
-    <!-- Create Task Dialog -->
+    <!-- Dialog pour créer une nouvelle tâche -->
     <p-dialog
         header="Create Task"
         [(visible)]="displayCreateTaskDialog"
         [modal]="true"
-        [responsive]="true"
         [style]="{ width: '30vw', 'min-height': '45vh' }"
         [contentStyle]="{ 'overflow-y': 'auto' }"
         [baseZIndex]="1000"
     >
+        <!-- Réutilisation du composant de formulaire de tâche -->
         <app-task-form
             [initialStatus]="taskStatusForNew"
             [users]="users"

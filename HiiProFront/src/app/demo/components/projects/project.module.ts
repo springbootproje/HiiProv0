@@ -13,7 +13,7 @@ import { DialogModule } from 'primeng/dialog';
 import { CardModule } from 'primeng/card';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
-import { DragDropModule } from 'primeng/dragdrop';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { ProjectFormComponent } from './project-form/project-form.component';
