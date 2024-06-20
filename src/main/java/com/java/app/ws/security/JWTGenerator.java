@@ -24,6 +24,7 @@ public class JWTGenerator {
 
         String token = Jwts.builder()
                 .setSubject(username)
+
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
                 .signWith(key, SignatureAlgorithm.HS512)

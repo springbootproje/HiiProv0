@@ -37,7 +37,7 @@ export interface TaskDto {
     status: string;
     userId: number;
     projactId: number;
-    dateCreation:string;
+    dateCreation:Date;
     // Other task properties as needed
 }
 

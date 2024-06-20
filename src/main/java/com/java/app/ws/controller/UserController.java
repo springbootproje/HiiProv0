@@ -1,5 +1,6 @@
 package com.java.app.ws.controller;
 
+import com.java.app.ws.ApiResponse;
 import com.java.app.ws.Response.AuthResponseDTO;
 import com.java.app.ws.Response.LoginResponse;
 import com.java.app.ws.dto.*;
@@ -92,20 +93,18 @@ public class UserController {
 	}
 
 
-	@PostMapping("/{id}/change-password")//method tested
-	public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody PasswordChangeDto passwordChangeDto) {
+	@PostMapping("/change-password")
+	public ResponseEntity<ApiResponse> changePassword(@RequestBody PasswordChangeRequestDto passwordChangeRequestDto) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String currentUserEmail = authentication.getName();
+
 		try {
-			boolean updateSuccess = userService.updatePassword(id, passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
-			if (updateSuccess) {
-				return ResponseEntity.ok("Password updated successfully");
-			} else {
-				return ResponseEntity.badRequest().body("Password update failed");
-			}
-		} catch (RuntimeException ex) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+			userService.changePassword(currentUserEmail, passwordChangeRequestDto.getCurrentPassword(), passwordChangeRequestDto.getNewPassword());
+			return ResponseEntity.ok(new ApiResponse("Password changed successfully"));
+		} catch (RuntimeException e) {
+			return ResponseEntity.badRequest().body(new ApiResponse(e.getMessage()));
 		}
 	}
-
 	@DeleteMapping("/delete/{id}") //method tested
 	public ResponseEntity<?> deleteUser(@PathVariable Long id) {
 		userService.deleteUser(id);

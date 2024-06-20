@@ -5,6 +5,7 @@ import { AppLayoutComponent } from './layout/app.layout.component';
 import { authGuard } from './demo/components/auth/auth-guard.component';
 import {ProjectPreviewComponent} from "./demo/components/projects/project-preview/project-preview.component";
 import {DashboardComponent} from "./demo/components/dashboard/dashboard.component";
+import {ChangePasswordComponent} from "./demo/components/change-password/change-password.component";
 
 @NgModule({
     imports: [
@@ -22,33 +23,21 @@ import {DashboardComponent} from "./demo/components/dashboard/dashboard.componen
                                 ).then((m) => m.DashboardModule),
                             canActivate: [authGuard],
                         },
+                        {
+                            path: 'settings',
+                            children: [
+                                {
+                                    path: 'changepassword',
+                                    component: ChangePasswordComponent, // Assurez-vous que ce composant est importé
+                                    canActivate: [authGuard], // Si vous avez besoin de protéger cette route
+                                },
+                            ],
+                        },
 
 
-                        {
-                            path: 'documentation',
-                            loadChildren: () =>
-                                import(
-                                    './demo/components/documentation/documentation.module'
-                                ).then((m) => m.DocumentationModule),
-                            canActivate: [authGuard],
-                        },
-                        {
-                            path: 'blocks',
-                            loadChildren: () =>
-                                import(
-                                    './demo/components/primeblocks/primeblocks.module'
-                                ).then((m) => m.PrimeBlocksModule),
-                            canActivate: [authGuard],
-                        },
-                        {
-                            path: 'pages',
-                            loadChildren: () =>
-                                import(
-                                    './demo/components/pages/pages.module'
-                                ).then((m) => m.PagesModule),
-                            canActivate: [authGuard],
-                        },
-                        {
+
+
+                {
                             path: 'project',
                             loadChildren: () =>
                                 import(
@@ -66,13 +55,7 @@ import {DashboardComponent} from "./demo/components/dashboard/dashboard.componen
                             (m) => m.AuthModule
                         ),
                 },
-                {
-                    path: 'landing',
-                    loadChildren: () =>
-                        import('./demo/components/landing/landing.module').then(
-                            (m) => m.LandingModule
-                        ),
-                },
+
                 { path: 'notfound', component: NotfoundComponent },
                 { path: '**', redirectTo: '/notfound' },
             ],

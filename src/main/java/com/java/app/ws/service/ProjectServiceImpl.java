@@ -11,6 +11,7 @@ import com.java.app.ws.entity.UserEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
@@ -210,6 +211,7 @@ public class ProjectServiceImpl implements ProjectService {
                         taskDto.setStatus(task.getStatut());
 
                         taskDto.setUserId(task.getUser().getId());
+                   System.out.println(task.getDateCreation());
                         return taskDto;
                     }).collect(Collectors.toList());
 
