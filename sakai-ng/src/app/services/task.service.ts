@@ -55,23 +55,19 @@ export class TaskService {
             { headers }
         );
     }
-
-    // Delete a task by its ID
-    deleteTask(taskId: number): Observable<ApiResponse> {
-        const headers = this.getAuthHeaders();
-        return this.http.delete<ApiResponse>(
-            `${this.apiUrl}/delete/${taskId}`,
-            { headers }
-        );
-    }
-
     updateTaskStatus(taskId: number, status: string): Observable<TaskDto> {
-        const url = `${this.apiUrl}/${taskId}/status`; // Adjust the endpoint as necessary
-        const headers = new HttpHeaders().set(
-            'Content-Type',
-            'application/json'
-        );
+        const url = `${this.apiUrl}/updateStatus/${taskId}`;
+        const headers = this.getAuthHeaders();
 
         return this.http.put<TaskDto>(url, { status }, { headers });
     }
+
+
+    // Delete a task by its ID
+    deleteTask(taskId: number): Observable<void> {
+        const headers = this.getAuthHeaders();
+        return this.http.delete<void>(`${this.apiUrl}/delete/${taskId}`, { headers });
+    }
+
+
 }

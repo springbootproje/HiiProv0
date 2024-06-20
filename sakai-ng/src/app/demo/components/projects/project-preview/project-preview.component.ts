@@ -1,12 +1,10 @@
+// Importations nécessaires
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ProjectService } from 'src/app/services/project.service';
 import { TaskService } from 'src/app/services/task.service';
 import { ProjectSummaryDto, TaskDto } from '../project.model';
-import {
-    CdkDragDrop,
-    moveItemInArray,
-    transferArrayItem,
-} from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MessageService } from 'primeng/api';
 import { ActivatedRoute } from '@angular/router';
 
@@ -29,14 +27,14 @@ export class ProjectPreviewComponent implements OnInit {
     displayTaskDetailsDialog: boolean = false;
     displayCreateTaskDialog: boolean = false;
     selectedTask: TaskDto | null = null;
-    taskStatusForNew: string = ''; // This will hold the status for new tasks
+    taskStatusForNew: string = '';
     taskColumns = [
         { title: 'Backlog', status: 'backlog' },
         { title: 'To Do', status: 'todo' },
         { title: 'Doing', status: 'doing' },
         { title: 'Done', status: 'done' },
     ];
-    users: { label: string; value: number }[] = []; // List of project members
+    users: { label: string; value: number }[] = [];
     statuses: { label: string; value: string }[] = [
         { label: 'Not Started', value: 'not_started' },
         { label: 'To Do', value: 'todo' },
@@ -44,12 +42,23 @@ export class ProjectPreviewComponent implements OnInit {
         { label: 'Done', value: 'done' },
     ];
 
+    // Formulaire pour l'édition des tâches
+    taskEditForm: FormGroup;
+
     constructor(
+        private fb: FormBuilder,
         private projectService: ProjectService,
         private taskService: TaskService,
         private messageService: MessageService,
         private route: ActivatedRoute
-    ) {}
+    ) {
+        this.taskEditForm = this.fb.group({
+            title: [''],
+            description: [''],
+            status: [''],
+            userId: [null]
+        });
+    }
 
     ngOnInit(): void {
         this.loadProject();
@@ -65,9 +74,7 @@ export class ProjectPreviewComponent implements OnInit {
                 label: `${member.firstName} ${member.lastName}`,
                 value: member.id,
             }));
-            console.log(project);
 
-            // Organize tasks after they are loaded
             this.organizeTasks();
         });
     }
@@ -80,7 +87,6 @@ export class ProjectPreviewComponent implements OnInit {
             done: [],
         };
         this.tasks.forEach((task) => {
-            // Ensure the task status matches the column status used in taskColumns
             switch (task.status) {
                 case 'not_started':
                     this.filteredTasks['backlog'].push(task);
@@ -132,11 +138,17 @@ export class ProjectPreviewComponent implements OnInit {
 
     showTaskDetails(task: TaskDto): void {
         this.selectedTask = task;
+        // Initialiser le formulaire de modification avec les détails de la tâche sélectionnée
+        this.taskEditForm.patchValue({
+            title: task.title,
+            description: task.description,
+            status: task.status,
+            userId: task.userId
+        });
         this.displayTaskDetailsDialog = true;
     }
 
     showCreateTaskDialog(status: string): void {
-        // Map the column status to the task status
         this.taskStatusForNew = this.mapColumnStatusToTaskStatus(status);
         this.displayCreateTaskDialog = true;
     }
@@ -158,42 +170,103 @@ export class ProjectPreviewComponent implements OnInit {
 
     onTaskCreated(): void {
         this.displayCreateTaskDialog = false;
-        this.loadProject(); // Reload tasks after a new one is created
+        this.loadProject();
+    }
+
+    updateTask(): void {
+        if (this.selectedTask) {
+            const updatedTask = { ...this.selectedTask, ...this.taskEditForm.value };
+            this.taskService.updateTask(updatedTask).subscribe({
+                next: (response) => {
+                    console.log("Tâche mise à jour avec succès :", response);
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Succès',
+                        detail: 'Les détails de la tâche ont été mis à jour avec succès!',
+                    });
+                    this.loadProject(); // Recharger le projet pour mettre à jour les tâches
+                    this.displayTaskDetailsDialog = false; // Fermer le dialogue
+                },
+                error: (error) => {
+                    console.error("Erreur lors de la mise à jour de la tâche :", error);
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Erreur',
+                        detail: 'Échec de la mise à jour de la tâche',
+                    });
+                }
+            });
+        }
+    }
+
+    deleteTask(taskId: number): void {
+        if (confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')) {
+            this.taskService.deleteTask(taskId).subscribe({
+                next: () => {
+                    console.log('Tâche supprimée avec succès');
+                    this.messageService.add({
+                        severity: 'success',
+                        summary: 'Succès',
+                        detail: 'Tâche supprimée avec succès!',
+                    });
+                    this.loadProject(); // Recharger le projet pour mettre à jour les tâches
+                },
+                error: (error) => {
+                    console.error('Erreur lors de la suppression de la tâche :', error);
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Erreur',
+                        detail: 'Échec de la suppression de la tâche',
+                    });
+                },
+            });
+        }
     }
 
     onTaskDrop(event: CdkDragDrop<TaskDto[]>): void {
         if (event.previousContainer === event.container) {
+            // Réorganiser dans la même colonne
             moveItemInArray(
                 event.container.data,
                 event.previousIndex,
                 event.currentIndex
             );
         } else {
+            // Transférer entre les colonnes
             transferArrayItem(
                 event.previousContainer.data,
                 event.container.data,
                 event.previousIndex,
                 event.currentIndex
             );
+
+            // Mettre à jour le statut de la tâche basé sur la nouvelle colonne
             const task = event.container.data[event.currentIndex];
-            task.status = this.getStatusFromContainer(event.container.id);
-            this.taskService.updateTaskStatus(task.id, task.status).subscribe({
-                next: () => {
-                    this.messageService.add({
-                        severity: 'success',
-                        summary: 'Success',
-                        detail: 'Task status updated successfully!',
-                    });
-                },
-                error: () => {
-                    this.messageService.add({
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'Failed to update task status',
-                    });
-                    this.loadProject(); // Revert changes on error
-                },
-            });
+            const newStatus = this.getStatusFromContainer(event.container.id);
+
+            if (task.status !== newStatus) {
+                task.status = newStatus;
+
+                // Mettre à jour la tâche dans le service backend
+                this.taskService.updateTaskStatus(task.id, newStatus).subscribe({
+                    next: (updatedTask) => {
+                        this.messageService.add({
+                            severity: 'success',
+                            summary: 'Succès',
+                            detail: 'Le statut de la tâche a été mis à jour avec succès!',
+                        });
+                    },
+                    error: (error) => {
+                        console.error('Échec de la mise à jour du statut de la tâche', error);
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Erreur',
+                            detail: 'Échec de la mise à jour du statut de la tâche',
+                        });
+                        this.loadProject(); // Recharger les tâches en cas d'erreur
+                    },
+                });
+            }
         }
     }
 
@@ -213,6 +286,12 @@ export class ProjectPreviewComponent implements OnInit {
     }
 
     getProjectIdFromRoute(): number {
-        return +this.route.snapshot.paramMap.get('id')!; // Get project ID from the route parameters and convert it to a number
+        return +this.route.snapshot.paramMap.get('id')!;
     }
+
+    getUserName(userId: number): string {
+        const user = this.users.find((u) => u.value === userId);
+        return user ? user.label : 'Non assigné';
+    }
+
 }

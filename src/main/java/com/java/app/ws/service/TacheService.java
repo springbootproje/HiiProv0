@@ -17,4 +17,6 @@ public interface TacheService {
      void deleteTache(Long id);
 
      TacheDto getTacheById(Long id);
+
+     TacheDto updateTacheStatus(Long id, String newStatus);
 }

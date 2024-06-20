@@ -5,7 +5,7 @@
 
     .action-bar {
         display: flex;
-        justify-content: space-between; // Adjust to align search bar and buttons
+        justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
 
@@ -21,28 +21,28 @@
 
     .board {
         display: flex;
-        gap: 20px; // Spacing between columns
-        overflow-x: auto; // Prevent horizontal scrolling
+        gap: 20px;
+        overflow-x: auto;
 
         .task-column {
             flex: 1;
-            min-width: 200px; // Minimum width for responsive design
-            background-color: #f8f9fa; // Default column background color
+            min-width: 200px;
+            background-color: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
             &.backlog {
-                background-color: #fce4ec; // Light pink for Backlog
+                background-color: #fce4ec;
             }
             &.todo {
-                background-color: #fff3e0; // Light orange for To Do
+                background-color: #fff3e0;
             }
             &.doing {
-                background-color: #e3f2fd; // Light blue for Doing
+                background-color: #e3f2fd;
             }
             &.done {
-                background-color: #e8f5e9; // Light green for Done
+                background-color: #e8f5e9;
             }
 
             .task-column-header {
@@ -73,7 +73,7 @@
             .task-list {
                 display: flex;
                 flex-direction: column;
-                gap: 10px; // Space between tasks
+                gap: 10px;
 
                 .task-card {
                     position: relative;
@@ -88,28 +88,91 @@
                         background-color: #f0f0f0;
                     }
 
+                    .task-header {
+                        display: flex;
+                        align-items: center; /* Align icons and title vertically */
+                        gap: 10px; /* Space between elements */
+                    }
+
+                    .task-title {
+                        margin: 0;
+                        flex-grow: 1; /* Take up remaining space */
+                        text-align: left; /* Align title to the left */
+                    }
+
+                    .task-actions {
+                        display: flex;
+                        gap: 10px;
+                    }
+
                     .task-button {
-                        position: absolute;
-                        top: 10px;
-                        right: 10px;
-                        display: none;
                         background-color: transparent;
                         border: none;
                         color: #007bff;
                         cursor: pointer;
-                        transition: opacity 0.3s ease;
+                        transition: color 0.3s ease;
 
                         &:hover {
                             color: #0056b3;
                         }
                     }
 
-                    &:hover .task-button {
-                        display: inline-block;
-                        opacity: 1;
+                    .delete-button {
+                        background-color: transparent;
+                        border: none;
+                        color: red;
+                        cursor: pointer;
+                        transition: color 0.3s ease;
+
+                        &:hover {
+                            color: darkred;
+                        }
                     }
                 }
             }
         }
     }
+}
+
+/* Styles pour le drag-and-drop */
+.cdk-drag-preview {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: scale(0.9);
+    opacity: 0.8;
+}
+
+.cdk-drag-placeholder {
+    background: #e0e0e0;
+    border: 2px dashed #aaa;
+    min-height: 60px;
+}
+
+.cdk-drag-handle {
+    z-index: 10;
+}
+
+.cdk-drop-list-dragging .task-column {
+    border-color: #000;
+    background-color: #e7f5ff;
+}
+
+.project-preview-container .p-field {
+    margin-bottom: 1rem;
+}
+
+.project-preview-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.project-preview-container input,
+.project-preview-container textarea,
+.project-preview-container p-dropdown {
+    width: 100%;
+}
+
+.project-preview-container .p-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
 }

@@ -13,14 +13,15 @@ import { DialogModule } from 'primeng/dialog';
 import { CardModule } from 'primeng/card';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ToastModule } from 'primeng/toast';
-import { DragDropModule } from 'primeng/dragdrop';
+import { DragDropModule } from '@angular/cdk/drag-drop'; // Assurez-vous que c'est bien importé
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+
 
 import { ProjectFormComponent } from './project-form/project-form.component';
 import { ProjectListComponent } from './project-list/project-list.component';
 import { ProjectEditComponent } from './project-edit/project-edit.component';
 import { ProjectPreviewComponent } from './project-preview/project-preview.component';
-import { TaskFormComponent } from './task-form/task-form.component'; // Import TaskFormComponent
+import { TaskFormComponent } from './task-form/task-form.component';
 import { MessageService, ConfirmationService } from 'primeng/api';
 
 const routes: Routes = [
@@ -36,7 +37,7 @@ const routes: Routes = [
         ProjectListComponent,
         ProjectEditComponent,
         ProjectPreviewComponent,
-        TaskFormComponent, // Declare TaskFormComponent
+        TaskFormComponent,
     ],
     imports: [
         CommonModule,
@@ -53,7 +54,7 @@ const routes: Routes = [
         CardModule,
         ProgressSpinnerModule,
         ToastModule,
-        DragDropModule, // Import DragDropModule for the drag-and-drop functionality
+        DragDropModule, // Import du module de drag-and-drop
         ConfirmDialogModule,
         RouterModule.forChild(routes),
     ],

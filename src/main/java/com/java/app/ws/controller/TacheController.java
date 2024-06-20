@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -47,7 +48,7 @@ public class TacheController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
 		}
 	}
-	
+
 	@GetMapping(value="/get")
 	public List<TacheDto> getAllTaches() {
 		return tacheService.getAllTaches();
@@ -63,16 +64,28 @@ public class TacheController {
 		}
 	}
 	@PutMapping(value="/update/{id}")
-	public TacheDto updateTache(@PathVariable Long id, @RequestBody TacheRequest tacheRequest) {
-		TacheDto tacheDto = new TacheDto();
-		BeanUtils.copyProperties(tacheRequest, tacheDto,"id");// id fixe
-		return tacheService.updateTache(id, tacheDto);
+	public ResponseEntity<?> updateTacheStatus(@PathVariable Long id, @RequestBody Map<String, String> statusUpdate) {
+		try {
+			String newStatus = statusUpdate.get("status");
+			TacheDto updatedTache = tacheService.updateTacheStatus(id, newStatus);
+			return ResponseEntity.ok(updatedTache);
+		} catch (NoSuchElementException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tâche non trouvée avec l'ID : " + id);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la mise à jour du statut de la tâche : " + e.getMessage());
+		}
 	}
 
-	@DeleteMapping(value="/delete/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> deleteTache(@PathVariable Long id) {
-		tacheService.deleteTache(id);
-		return ResponseEntity.ok("Tâche avec l'ID " + id+ " supprimée avec succès");
+		try {
+			tacheService.deleteTache(id);
+			return ResponseEntity.ok("Tâche avec l'ID " + id + " supprimée avec succès");
+		} catch (NoSuchElementException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tâche non trouvée avec l'ID : " + id);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la suppression de la tâche : " + e.getMessage());
+		}
 	}
 
 
