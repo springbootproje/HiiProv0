@@ -8,6 +8,7 @@ public class ProjectSummaryDto {
     private String title;
     private String description;
     private LocalDate createDate;
+
     private List<UserDto> members;
     private List<TacheDto> tasks; // Add this field
 
@@ -59,4 +60,5 @@ public class ProjectSummaryDto {
     public void setTasks(List<TacheDto> tasks) {
         this.tasks = tasks;
     }
+
 }

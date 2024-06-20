@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -66,7 +67,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     //     return project;
     // }
-  
+
 
     // private void addMemberToProject(UserEntity user, ProjectEntity project) {
     //     // Check if the user is already a member of the project
@@ -131,14 +132,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectSummaryDto> getAllProjectSummaries() {
         List<ProjectEntity> projectEntities = projectRepository.findAll();
-    
+
         return projectEntities.stream().map(entity -> {
             ProjectSummaryDto dto = new ProjectSummaryDto();
             dto.setId(entity.getId()); // Set the project ID
             dto.setTitle(entity.getTitle());
             dto.setDescription(entity.getDescription());
             dto.setCreateDate(entity.getCreateDate());
-    
+
             // Fetch members from the Participant table
             List<UserDto> members = participantRepository.findByProject(entity).stream()
                     .map(ParticipantEntity::getUser)
@@ -150,11 +151,89 @@ public class ProjectServiceImpl implements ProjectService {
                         userDto.setEmail(user.getEmail());
                         return userDto;
                     }).collect(Collectors.toList());
-    
+
             dto.setMembers(members);
+
+            // Fetch tasks related to the project
+            List<TacheDto> tasks = entity.getTasks().stream()
+                    .map(task -> {
+                        TacheDto taskDto = new TacheDto();
+                        taskDto.setId(task.getId());
+                        taskDto.setTitle(task.getTitle());
+                        taskDto.setDescription(task.getDescription());
+                        taskDto.setStatus(task.getStatut());
+                        taskDto.setDateCreation(task.getDateCreation());
+                        taskDto.setUserId(task.getUser().getId());
+                        return taskDto;
+                    }).collect(Collectors.toList());
+
+            dto.setTasks(tasks);
+
             return dto;
         }).collect(Collectors.toList());
     }
+    @Override
+    public List<ProjectSummaryDto> getProjectSummariesByUser(Long userId) {
+        // Fetch all projects from the repository
+        List<ProjectEntity> projectEntities = projectRepository.findAll();
+
+        // Map each project to ProjectSummaryDto
+        List<ProjectSummaryDto> projectSummaryDtos = projectEntities.stream().map(entity -> {
+            ProjectSummaryDto dto = new ProjectSummaryDto();
+            dto.setId(entity.getId()); // Set the project ID
+            dto.setTitle(entity.getTitle());
+            dto.setDescription(entity.getDescription());
+            dto.setCreateDate(entity.getCreateDate());
+
+            // Fetch members from the Participant table
+            List<UserDto> members = participantRepository.findByProject(entity).stream()
+                    .map(ParticipantEntity::getUser)
+                    .map(user -> {
+                        UserDto userDto = new UserDto();
+                        userDto.setId(user.getId());
+                        userDto.setFirstName(user.getFirstName());
+                        userDto.setLastName(user.getLastName());
+                        userDto.setEmail(user.getEmail());
+                        return userDto;
+                    }).collect(Collectors.toList());
+
+            dto.setMembers(members);
+
+            // Fetch tasks related to the project
+            List<TacheDto> tasks = entity.getTasks().stream()
+                    .map(task -> {
+                        TacheDto taskDto = new TacheDto();
+                        taskDto.setId(task.getId());
+                        taskDto.setTitle(task.getTitle());
+                        taskDto.setDescription(task.getDescription());
+                        taskDto.setDateCreation(task.getDateCreation());
+                        taskDto.setStatus(task.getStatut());
+
+                        taskDto.setUserId(task.getUser().getId());
+                        return taskDto;
+                    }).collect(Collectors.toList());
+
+            dto.setTasks(tasks);
+
+            return dto;
+        }).collect(Collectors.toList());
+
+        // Filter the project summary list where the user is a member
+        List<ProjectSummaryDto> filteredProjectSummaries = projectSummaryDtos.stream()
+                .filter(projectSummary ->
+                        projectSummary.getMembers().stream()
+                                .anyMatch(member -> member.getId() == userId) // Use == for direct comparison
+                )
+                .collect(Collectors.toList());
+
+        // Return the filtered list
+        return filteredProjectSummaries;
+    }
+
+
+
+
+
 
     public ProjectSummaryDto getProjectById(Long projectId) {
         ProjectEntity projectEntity = projectRepository.findById(projectId)
@@ -189,6 +268,7 @@ public class ProjectServiceImpl implements ProjectService {
                     taskDto.setDescription(task.getDescription());
                     taskDto.setStatus(task.getStatut());
                     taskDto.setUserId(task.getUser().getId());
+                    taskDto.setDateCreation(task.getDateCreation());
                     return taskDto;
                 }).collect(Collectors.toList());
 
@@ -253,17 +333,17 @@ public class ProjectServiceImpl implements ProjectService {
         // Find the project
         ProjectEntity project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("Project not found with ID: " + projectId));
-    
+
         // Delete participants associated with the project
         List<ParticipantEntity> participants = participantRepository.findByProject(project);
         participantRepository.deleteAll(participants);
-    
+
         // Delete the project
         projectRepository.delete(project);
     }
 
 
-    @Override //hadi baqili fiha qlq modif
+    @Override
     public List<ProjectDto> getProjectsFromStartDate(LocalDate startDate) {
         return projectRepository.findByCreateDateGreaterThanEqual(startDate);
     }

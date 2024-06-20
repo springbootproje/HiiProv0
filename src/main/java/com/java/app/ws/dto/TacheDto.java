@@ -1,5 +1,8 @@
 package com.java.app.ws.dto;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 public class TacheDto {
     private Long id;
     private String title;  // Added title
@@ -7,7 +10,7 @@ public class TacheDto {
     private String status; // Changed to match the usual naming convention
     private Long userId;
     private Long projectId; // Added project ID
-
+    private LocalDate dateCreation;
     // Getters and Setters
     public Long getId() {
         return id;
@@ -55,5 +58,13 @@ public class TacheDto {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
+    }
+
+    public LocalDate getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(LocalDate dateCreation) {
+        this.dateCreation = dateCreation;
     }
 }
