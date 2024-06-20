@@ -1,5 +1,5 @@
 CREATE TABLE user (
-      id long auto_increment not null ,
+      id bigint auto_increment not null ,
       firstName varchar(255),
       lastName varchar(255),
       email varchar(255),
@@ -11,7 +11,7 @@ CREATE TABLE project (
      id bigint auto_increment not null ,
      title varchar(255),
      description varchar(255),
-     user_id long not null ,
+     user_id bigint not null ,
      PRIMARY KEY (ID),
      FOREIGN KEY (user_id) REFERENCES user(id)
 );
@@ -30,9 +30,11 @@ CREATE TABLE tache (
                        description TEXT,
                        statut varchar(50),
                        PRIMARY KEY (ID),
-                       id_u long not null,
+                       id_u bigint not null,
                        id_p bigint not null,
                        FOREIGN KEY (id_u) REFERENCES user(id),
                        FOREIGN KEY (id_p) REFERENCES project(id)
 );
 
+alter table tache
+    MODIFY COLUMN date_creation date null;
