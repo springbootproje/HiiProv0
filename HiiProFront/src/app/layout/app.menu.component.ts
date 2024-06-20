@@ -1,6 +1,8 @@
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
+import {AuthService} from "../services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-menu',
@@ -9,45 +11,43 @@ import { LayoutService } from './service/app.layout.service';
 export class AppMenuComponent implements OnInit {
     model: any[] = [];
 
-    constructor(public layoutService: LayoutService) {}
+    constructor(public layoutService: LayoutService,   private authService: AuthService,       private router: Router  ) {
+
+    }
 
     ngOnInit() {
         this.model = [
             {
-                label: 'General', // Dashboard
+                label: 'Generale', // Dashboard
                 icon: 'pi pi-fw pi-home', // Home icon
                 items: [
                     {
-                        label: 'Dashboard', // Overview of supervised projects
+                        label: 'Tableau de bord', // Overview of supervised projects
                         icon: 'pi pi-fw pi-eye',
                         routerLink: ['/'],
                     },
-                    {
-                        label: 'Calendar', // Calendar
-                        icon: 'pi pi-fw pi-calendar',
-                        routerLink: ['/dashboard/calendar'],
-                    },
+
                 ],
             },
 
             {
-                label: ' projects Management', // Project management
+                label: 'Gestion des projets', // Project management
                 icon: 'pi pi-fw pi-sitemap', // Sitemap icon
                 items: [
                     {
-                        label: 'My Projects', // List of supervised projects
+                        label: 'Mes Projets', // List of supervised projects
                         icon: 'pi pi-fw pi-list',
-                        routerLink: ['/project'],
+                        routerLink: ['/projects/membermanagement'],
                     },
                     {
-                        label: 'My Tasks', // List of supervised projects
+                        label: 'Mes Taches', // List of supervised projects
                         icon: 'pi pi-fw pi-check-square',
-                        routerLink: ['/project/preview/:id'],
+                        routerLink: ['/projects/membermanagement'],
                     },
                     {
-                        label: ' Projcet Creation', // List of supervised projects
+                        label: 'Creation de Projet', // List of supervised projects
                         icon: 'pi pi-fw pi-user-plus',
-                        routerLink: ['/project/create'],
+                        routerLink: ['/projects/membermanagement'],
                     },
                 ],
             },
@@ -56,85 +56,45 @@ export class AppMenuComponent implements OnInit {
                 icon: 'pi pi-fw pi-book', // Book icon
                 items: [
                     {
-                        label: 'Ressources and Library', // Resources and library
+                        label: 'Ressources et bibliothèque', // Resources and library
                         icon: 'pi pi-fw pi-folder-open',
                         routerLink: ['/resources/library'],
                     },
                 ],
             },
+
+
             {
-                label: 'Communication', // Communication
-                icon: 'pi pi-fw pi-comments', // Comments icon
-                items: [
-                    {
-                        label: 'Discussion', // Discussion
-                        icon: 'pi pi-fw pi-comment',
-                        routerLink: ['/communication/discussion'],
-                    },
-                ],
-            },
-            {
-                label: 'Rapport and Analytics', // Reports and Analysis
-                icon: 'pi pi-fw pi-chart-line', // Chart line icon
-                items: [
-                    {
-                        label: 'List of projects', // List of supervised projects
-                        icon: 'pi pi-fw pi-list',
-                        routerLink: ['/project'],
-                    },
-                    {
-                        label: 'List of Tasks', // List of supervised projects
-                        icon: 'pi pi-fw pi-check-square',
-                        routerLink: ['/reports/projectname'],
-                    },
-                ],
-            },
-            {
-                label: 'Settings', // Account Settings
+                label: 'Paramètres du compte', // Account Settings
                 icon: 'pi pi-fw pi-cog', // Settings icon
                 items: [
                     {
-                        label: 'My profil', // My profile
+                        label: 'Deconnexion', // My profile
                         icon: 'pi pi-fw pi-user-edit',
-                        routerLink: ['/settings/profile'],
+                        command: () => this.logout() ,
                     },
+
+
                     {
-                        label: 'Modify My Profil Picture', // Change profile picture
-                        icon: 'pi pi-fw pi-user-plus',
-                        routerLink: ['/settings/profilepic'],
-                    },
-                    {
-                        label: 'Modify My Bio', // Change biography
-                        icon: 'pi pi-fw pi-pencil',
-                        routerLink: ['/settings/bio'],
-                    },
-                    {
-                        label: 'Account Management', // Account management
-                        icon: 'pi pi-fw pi-users',
-                        routerLink: ['/settings/accountmanagement'],
-                    },
-                    {
-                        label: 'Change My password', // Change password
+                        label: 'Changer le mot de passe', // Change password
                         icon: 'pi pi-fw pi-key',
                         routerLink: ['/settings/changepassword'],
                     },
                     {
-                        label: 'system Configuration', // System configuration
+                        label: 'Configuration du système', // System configuration
                         icon: 'pi pi-fw pi-sliders-h',
                         routerLink: ['/settings/systemconfig'],
+                        //fdf
                     },
-                    {
-                        label: 'Modify the language', // Change language
-                        icon: 'pi pi-fw pi-globe',
-                        routerLink: ['/settings/changelanguage'],
-                    },
-                    {
-                        label: 'Modify the theme', // Change theme
-                        icon: 'pi pi-fw pi-palette',
-                        routerLink: ['/settings/changetheme'],
-                    },
+
+
                 ],
             },
         ];
     }
+
+logout() {
+    this.authService.logout(); // Appelle le service de déconnexion
+    this.router.navigate(['/auth/login']); // Redirige vers la page de connexion
+}
 }

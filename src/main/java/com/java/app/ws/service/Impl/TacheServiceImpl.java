@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -37,7 +38,7 @@ public TacheDto createTache(TacheCreationDto tacheCreationDto) {
     tacheEntity.setTitle(tacheCreationDto.getTitle());
     tacheEntity.setDescription(tacheCreationDto.getDescription());
     tacheEntity.setStatut(tacheCreationDto.getStatus());
-    tacheEntity.setDateCreation(tacheCreationDto.getDateCreation());
+    tacheEntity.setDateCreation(LocalDate.now());
 
 
     // Set the user if provided
