@@ -16,6 +16,8 @@ export class ProjectListComponent implements OnInit {
     filteredProjects: ProjectSummaryDto[] = [];
     displayCreateProjectDialog: boolean = false;
     searchTerm: string = '';
+    role: string | null = null;
+    userId: string | null = localStorage.getItem('id');
     selectedProject: ProjectSummaryDto | null = null; // Selected project for editing
 
     constructor(
@@ -26,6 +28,7 @@ export class ProjectListComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
+        this.role = localStorage.getItem('role');
         this.loadProjects();
     }
 
@@ -35,8 +38,32 @@ export class ProjectListComponent implements OnInit {
             this.filteredProjects = this.projects;
         });
     }
+    filterProjects(): void {
+        if (this.role === 'TEACHER') {
+            this.filteredProjects = this.projects;
+        } else if (this.role === 'STUDENT') {
+            this.filteredProjects = this.projects.filter(project => this.isProjectMember(project));
+        }
+
+        if (this.searchTerm) {
+            this.filteredProjects = this.filteredProjects.filter((project) =>
+                project.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+            );
+        }
+    }
+    isProjectMember(project: ProjectSummaryDto): boolean {
+        return project.members.some(member => member.id === Number(this.userId));
+    }
 
     deleteProject(id: number): void {
+        if (this.role !== 'TEACHER') {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Only teachers can delete projects',
+            });
+            return;
+        }
         this.projectService.deleteProject(id).subscribe({
             next: (response) => {
                 this.messageService.add({
@@ -57,6 +84,14 @@ export class ProjectListComponent implements OnInit {
     }
 
     showCreateProjectDialog(): void {
+        if (this.role !== 'TEACHER') {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Access Denied',
+                detail: 'Only teachers can create projects',
+            });
+            return;
+        }
         this.displayCreateProjectDialog = true;
         this.selectedProject = null; // Clear selected project
     }
@@ -72,21 +107,21 @@ export class ProjectListComponent implements OnInit {
     }
 
     editProject(project: ProjectSummaryDto): void {
+
+        if (this.role !== 'TEACHER') {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Access Denied',
+                detail: 'Only teachers can edit projects',
+            });
+            return;
+        }
+
+
         this.selectedProject = project; // Set the selected project
         this.displayCreateProjectDialog = true; // Open the dialog for editing
     }
 
-    filterProjects(): void {
-        if (this.searchTerm) {
-            this.filteredProjects = this.projects.filter((project) =>
-                project.title
-                    .toLowerCase()
-                    .includes(this.searchTerm.toLowerCase())
-            );
-        } else {
-            this.filteredProjects = this.projects;
-        }
-    }
 
     getMembersTooltipText(members: UserDto[]): string {
         return members.length

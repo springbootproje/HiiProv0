@@ -18,7 +18,7 @@ export class ProjectFormComponent implements OnInit {
     users: UserOption[] = [];
     isLoading: boolean = false; // Loading state
     @Output() projectCreated = new EventEmitter<void>(); // Event emitter to notify project creation
-
+    role: string | null = localStorage.getItem('role');
     constructor(
         private fb: FormBuilder,
         private userService: UserService,
@@ -55,6 +55,14 @@ export class ProjectFormComponent implements OnInit {
     }
 
     onSubmit(): void {
+        if (this.role !== 'TEACHER') {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Access Denied',
+                detail: 'Only teachers can create projects',
+            });
+            return;
+        }
         if (this.projectForm.valid) {
             this.isLoading = true; // Start loading
             const project: ProjectCreationDto = {
