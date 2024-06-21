@@ -28,6 +28,7 @@
             icon="pi pi-plus"
             class="p-button-outlined create-project-button"
             (click)="showCreateProjectDialog()"
+            *ngIf="role === 'TEACHER'"
         ></button>
     </div>
 
@@ -82,6 +83,7 @@
                         icon="pi pi-trash"
                         class="p-button-outlined p-button-danger"
                         (click)="confirmDeleteProject(project.id)"
+                        *ngIf="role === 'TEACHER'"
                     ></button>
                 </ng-template>
             </p-card>

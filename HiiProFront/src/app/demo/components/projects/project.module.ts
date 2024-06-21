@@ -22,6 +22,7 @@ import { ProjectEditComponent } from './project-edit/project-edit.component';
 import { ProjectPreviewComponent } from './project-preview/project-preview.component';
 import { TaskFormComponent } from './task-form/task-form.component'; // Import TaskFormComponent
 import { MessageService, ConfirmationService } from 'primeng/api';
+import {DockModule} from "primeng/dock";
 
 const routes: Routes = [
     { path: '', component: ProjectListComponent },
@@ -56,6 +57,7 @@ const routes: Routes = [
         DragDropModule, // Import DragDropModule for the drag-and-drop functionality
         ConfirmDialogModule,
         RouterModule.forChild(routes),
+        DockModule,
     ],
     providers: [MessageService, ConfirmationService],
     exports: [ToastModule],
