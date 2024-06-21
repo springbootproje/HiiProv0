@@ -4,6 +4,8 @@ import com.java.app.ws.ApiResponse;
 import com.java.app.ws.Response.AuthResponseDTO;
 import com.java.app.ws.Response.LoginResponse;
 import com.java.app.ws.dto.*;
+import com.java.app.ws.entity.UserEntity;
+import com.java.app.ws.repository.UserRepository;
 import com.java.app.ws.security.JWTGenerator;
 import com.java.app.ws.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -29,13 +32,14 @@ public class UserController {
 	private final UserService userService;
 	private final AuthenticationManager authenticationManager;
 	private JWTGenerator jwtGenerator;
+	private UserRepository userRepository;
 	@Autowired
-	public UserController(UserService userService, AuthenticationManager authenticationManager,JWTGenerator jwtGenerator) {
+	public UserController(UserService userService, AuthenticationManager authenticationManager,JWTGenerator jwtGenerator, UserRepository userRepository) {
 		this.userService = userService;
 		this.authenticationManager = authenticationManager;
 		this.jwtGenerator = jwtGenerator;
+		this.userRepository = userRepository;
 	}
-   
 
 
 
@@ -52,20 +56,33 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<AuthResponseDTO> loginUser(@RequestBody LoginDTO loginDTO)
-	{
 
 
+	public ResponseEntity<AuthResponseDTO> loginUser(@RequestBody LoginDTO loginDTO) {
+		// Authenticate the user
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(
 						loginDTO.getEmail(),
 						loginDTO.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
+		// Generate JWT token
 		String token = jwtGenerator.generateToken(authentication);
-		return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
-	}
 
+		// Extract the authenticated user's details from the Authentication object
+
+		UserEntity userEntity = userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(() -> new UsernameNotFoundException("Username not found"));;
+
+
+		// Get the user's role
+		String role = userEntity.getRole();
+
+		// Create the response DTO including the token and role
+		AuthResponseDTO responseDTO = new AuthResponseDTO(token, role);
+
+		// Return the response
+		return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+	}
 	@GetMapping("/logout")
 	public String logout(HttpServletRequest request) {
 		request.getSession().invalidate();

@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -37,6 +38,7 @@ public class TacheServiceImpl implements TacheService {
         tacheEntity.setTitle(tacheCreationDto.getTitle());
         tacheEntity.setDescription(tacheCreationDto.getDescription());
         tacheEntity.setStatut(tacheCreationDto.getStatus());
+        tacheEntity.setDateCreation(LocalDate.now());
 
         // Set the user if provided
         if (tacheCreationDto.getUserId() != null) {
@@ -69,6 +71,9 @@ public class TacheServiceImpl implements TacheService {
         tacheDto.setStatus(newTache.getStatut());
         tacheDto.setUserId(newTache.getUser() != null ? newTache.getUser().getId() : null);
         tacheDto.setProjectId(newTache.getProject().getId());
+        tacheDto.setDateCreation(newTache.getDateCreation());
+
+
 
         return tacheDto;
     }
