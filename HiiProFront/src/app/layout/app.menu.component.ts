@@ -3,15 +3,18 @@ import { Component } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
 import {AuthService} from "../services/auth.service";
 import {Router} from "@angular/router";
+import {MessageService} from "primeng/api";
 
 @Component({
     selector: 'app-menu',
     templateUrl: './app.menu.component.html',
 })
 export class AppMenuComponent implements OnInit {
-    model: any[] = [];
 
-    constructor(public layoutService: LayoutService,   private authService: AuthService,       private router: Router  ) {
+    model: any[] = [];
+    role: string | null = localStorage.getItem('role');
+
+    constructor(public layoutService: LayoutService,private messageService: MessageService,   private authService: AuthService,private router: Router  ) {
 
     }
 
@@ -43,7 +46,7 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: ' Project Creation', // List of supervised projects
                         icon: 'pi pi-fw pi-user-plus',
-                        routerLink: ['/project/create'],
+                        command: () => this.checkProjectCreationPermission(),
                     },
                 ],
             },
@@ -83,8 +86,21 @@ export class AppMenuComponent implements OnInit {
             },
         ];
     }
+    checkProjectCreationPermission() {
+        if (this.role === 'TEACHER') {
+            this.router.navigate(['/project/create']); // Navigate to project creation page
+        } else {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Access Denied',
+                detail: 'Only teachers can create projects.',
+            });
+        }
+    }
 
-logout() {
+
+    logout() {
+        localStorage.removeItem('accessToken');
     this.authService.logout(); // Appelle le service de déconnexion
     this.router.navigate(['/auth/login']); // Redirige vers la page de connexion
 }
