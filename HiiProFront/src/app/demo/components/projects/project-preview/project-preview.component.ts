@@ -224,7 +224,10 @@ export class ProjectPreviewComponent implements OnInit {
     }
 
     onTaskDrop(event: CdkDragDrop<TaskDto[]>): void {
+
+        console.log('event',event);
         if (event.previousContainer === event.container) {
+
             // Réorganiser dans la même colonne
             moveItemInArray(
                 event.container.data,

@@ -1,5 +1,6 @@
 package com.java.app.ws.controller;
 
+import com.java.app.ws.ApiResponse;
 import com.java.app.ws.Request.TacheRequest;
 import com.java.app.ws.Response.TacheResponse;
 import com.java.app.ws.dto.TacheCreationDto;
@@ -77,14 +78,14 @@ public class TacheController {
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<String> deleteTache(@PathVariable Long id) {
+	public ResponseEntity<ApiResponse> deleteTache(@PathVariable Long id) {
 		try {
 			tacheService.deleteTache(id);
-			return ResponseEntity.ok("Tâche avec l'ID " + id + " supprimée avec succès");
+			return ResponseEntity.ok(new ApiResponse("deleted"));
 		} catch (NoSuchElementException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tâche non trouvée avec l'ID : " + id);
+			return ResponseEntity.badRequest().body(new ApiResponse(e.getMessage()));
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la suppression de la tâche : " + e.getMessage());
+				return ResponseEntity.badRequest().body(new ApiResponse(e.getMessage()));
 		}
 	}
 
