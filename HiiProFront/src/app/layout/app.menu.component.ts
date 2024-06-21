@@ -18,11 +18,11 @@ export class AppMenuComponent implements OnInit {
     ngOnInit() {
         this.model = [
             {
-                label: 'Generale', // Dashboard
+                label: 'General', // Dashboard
                 icon: 'pi pi-fw pi-home', // Home icon
                 items: [
                     {
-                        label: 'Tableau de bord', // Overview of supervised projects
+                        label: 'Dashboard', // Overview of supervised projects
                         icon: 'pi pi-fw pi-eye',
                         routerLink: ['/'],
                     },
@@ -31,23 +31,19 @@ export class AppMenuComponent implements OnInit {
             },
 
             {
-                label: 'Gestion des projets', // Project management
+                label: 'Projetcs Management', // Project management
                 icon: 'pi pi-fw pi-sitemap', // Sitemap icon
                 items: [
                     {
-                        label: 'Mes Projets', // List of supervised projects
+                        label: 'My Projects', // List of supervised projects
                         icon: 'pi pi-fw pi-list',
-                        routerLink: ['/projects/membermanagement'],
+                        routerLink: ['/project'],
                     },
+
                     {
-                        label: 'Mes Taches', // List of supervised projects
-                        icon: 'pi pi-fw pi-check-square',
-                        routerLink: ['/projects/membermanagement'],
-                    },
-                    {
-                        label: 'Creation de Projet', // List of supervised projects
+                        label: ' Project Creation', // List of supervised projects
                         icon: 'pi pi-fw pi-user-plus',
-                        routerLink: ['/projects/membermanagement'],
+                        routerLink: ['/project/create'],
                     },
                 ],
             },
@@ -56,7 +52,7 @@ export class AppMenuComponent implements OnInit {
                 icon: 'pi pi-fw pi-book', // Book icon
                 items: [
                     {
-                        label: 'Ressources et bibliothèque', // Resources and library
+                        label: 'Ressources and Library', // Resources and library
                         icon: 'pi pi-fw pi-folder-open',
                         routerLink: ['/resources/library'],
                     },
@@ -65,28 +61,23 @@ export class AppMenuComponent implements OnInit {
 
 
             {
-                label: 'Paramètres du compte', // Account Settings
+                label: 'Settings', // Account Settings
                 icon: 'pi pi-fw pi-cog', // Settings icon
                 items: [
-                    {
-                        label: 'Deconnexion', // My profile
-                        icon: 'pi pi-fw pi-user-edit',
-                        command: () => this.logout() ,
-                    },
+
 
 
                     {
-                        label: 'Changer le mot de passe', // Change password
+                        label: 'Changing Password', // Change password
                         icon: 'pi pi-fw pi-key',
                         routerLink: ['/settings/changepassword'],
                     },
-                    {
-                        label: 'Configuration du système', // System configuration
-                        icon: 'pi pi-fw pi-sliders-h',
-                        routerLink: ['/settings/systemconfig'],
-                        //fdf
-                    },
 
+                    {
+                        label: 'LogOut', // My profile
+                        icon: 'pi pi-fw pi-user-edit',
+                        command: () => this.logout() ,
+                    },
 
                 ],
             },
