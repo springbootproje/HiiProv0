@@ -1,4 +1,4 @@
-package com.java.app.ws;
+package com.java.app.ws.Response;
 
 public class ApiResponse {
     private String message;

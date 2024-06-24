@@ -18,8 +18,7 @@ public interface UserService {
     UserDto updateUser(Long id, UpdateUserDto userDetails);
 
     void deleteUser(Long id);
-    boolean updatePassword(Long userId, String currentPassword, String newPassword);
 
-    LoginResponse loginUser(LoginDTO loginDTO);
+
 
 }

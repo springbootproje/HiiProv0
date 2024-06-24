@@ -1,15 +1,12 @@
 package com.java.app.ws.controller;
 
-import com.java.app.ws.ApiResponse;
-import com.java.app.ws.Request.TacheRequest;
-import com.java.app.ws.Response.TacheResponse;
+import com.java.app.ws.Response.ApiResponse;
 import com.java.app.ws.dto.TacheCreationDto;
 import com.java.app.ws.dto.TacheDto;
 import com.java.app.ws.entity.UserEntity;
 import com.java.app.ws.repository.UserRepository;
 import com.java.app.ws.security.JWTGenerator;
 import com.java.app.ws.service.TacheService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

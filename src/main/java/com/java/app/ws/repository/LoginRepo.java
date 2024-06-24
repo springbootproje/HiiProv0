@@ -10,6 +10,7 @@ import java.util.Optional;
 @EnableJpaRepositories
 @Repository
 public interface LoginRepo extends JpaRepository<UserEntity,Integer> {
+    //
     Optional<UserEntity> findOneByEmailAndPassword(String email, String password);
     UserEntity findByEmail(String email);
 

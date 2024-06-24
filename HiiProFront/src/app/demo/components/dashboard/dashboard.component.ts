@@ -75,26 +75,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         this.loadProjects();
 
-        this.items = [
-            { label: 'Add New', icon: 'pi pi-fw pi-plus' },
-            { label: 'Remove', icon: 'pi pi-fw pi-minus' },
-        ];
+        this.items = [];
 
-        this.recentActivities = [
-            { description: 'Updated project plan', date: new Date() },
-            {
-                description: 'Completed task: UI Design',
-                date: new Date(new Date().setDate(new Date().getDate() - 1)),
-            },
-            {
-                description: 'Held project status meeting',
-                date: new Date(new Date().setDate(new Date().getDate() - 2)),
-            },
-            {
-                description: 'Added new team member: John Doe',
-                date: new Date(new Date().setDate(new Date().getDate() - 4)),
-            },
-        ];
+        this.recentActivities = [];
     }
 
 

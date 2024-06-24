@@ -1,4 +1,4 @@
-package com.java.app.ws.service;
+package com.java.app.ws.service.Impl;
 
 import com.java.app.ws.dto.*;
 import com.java.app.ws.repository.ParticipantRepo;
@@ -8,6 +8,7 @@ import com.java.app.ws.entity.ParticipantEntity;
 import com.java.app.ws.entity.ParticipantId;
 import com.java.app.ws.entity.ProjectEntity;
 import com.java.app.ws.entity.UserEntity;
+import com.java.app.ws.service.ProjectService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

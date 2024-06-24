@@ -1,11 +1,12 @@
 
-
-package com.java.app.ws.service;
+package com.java.app.ws.service.Impl;
 
 import com.java.app.ws.Response.LoginResponse;
 import com.java.app.ws.dto.LoginDTO;
 import com.java.app.ws.dto.UpdateUserDto;
+import com.java.app.ws.dto.UserDto;
 import com.java.app.ws.repository.LoginRepo;
+import com.java.app.ws.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,9 @@ public class UserServiceImpl implements UserService {
 	
 	}
 
-
+//class mere service
 	@Override
-	public com.java.app.ws.dto.UserDto createUser(CreateUserDto createUserDto) {
+	public UserDto createUser(CreateUserDto createUserDto) {
 		UserEntity userEntity = new UserEntity();
 	
 		BeanUtils.copyProperties(createUserDto, userEntity);
@@ -46,34 +47,14 @@ public class UserServiceImpl implements UserService {
 		userEntity.setCreateDate(LocalDate.now());
 		UserEntity savedUser = userRepository.save(userEntity);
 
-		com.java.app.ws.dto.UserDto newUserDto = new com.java.app.ws.dto.UserDto();
+	     UserDto newUserDto = new UserDto();
 		BeanUtils.copyProperties(savedUser, newUserDto);
-		// Assure-toi d'inclure l'ID, firstName, lastName, email, role
+		//inclure l'ID, firstName, lastName, email, role
 		newUserDto.setId(savedUser.getId()); // Déjà inclus grâce à BeanUtils si ces champs existent dans UserEntity
 		// Pas besoin d'ajouter les autres champs manuellement si BeanUtils a déjà copié les propriétés et que les noms correspondent
 		return newUserDto;
 	}
-	@Override
-	public LoginResponse loginUser(LoginDTO loginDTO) {
 
-		String msg = "";
-		UserEntity userUtity1 = loginRepo.findByEmail(loginDTO.getEmail());
-		if (userUtity1 != null) {
-			String password = loginDTO.getPassword();
-			String encodedPassword = userUtity1.getPassword();
-			Boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
-			if (isPwdRight) {
-
-				return new LoginResponse("Login Success", true);
-			} else {
-
-				return new LoginResponse("Password Not Match", false);
-			}
-		}     else {
-
-			return new LoginResponse("Email not exists", false);
-		}
-	}
 
 	@Override
 	public void changePassword(String email, String currentPassword, String newPassword) {
@@ -94,11 +75,11 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	@Override
-	public List<com.java.app.ws.dto.UserDto> getAllUsers() {
+	public List<UserDto> getAllUsers() {
 		List<UserEntity> userEntityList = userRepository.findAll();
-		List<com.java.app.ws.dto.UserDto> userDtoList = new ArrayList<>();
+		List<UserDto> userDtoList = new ArrayList<>();
 		for(UserEntity entity : userEntityList){
-			com.java.app.ws.dto.UserDto dto = new com.java.app.ws.dto.UserDto();
+		UserDto dto = new UserDto();
 			BeanUtils.copyProperties(entity, dto);
 			userDtoList.add(dto);
 		}
@@ -106,10 +87,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public com.java.app.ws.dto.UserDto getUserById(Long id) {
+	public UserDto getUserById(Long id) {
 		UserEntity userEntity = userRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("User not found"));
-		com.java.app.ws.dto.UserDto userDto = new com.java.app.ws.dto.UserDto();
+		com.java.app.ws.dto.UserDto userDto = new  UserDto();
 		BeanUtils.copyProperties(userEntity, userDto);
 		return userDto;
 	}
@@ -143,7 +124,7 @@ public class UserServiceImpl implements UserService {
 		UserEntity updatedUser = userRepository.save(userEntity);
 
 		// Préparation du DTO de retour.
-		com.java.app.ws.dto.UserDto updatedUserDto = new com.java.app.ws.dto.UserDto();
+		UserDto updatedUserDto = new UserDto();
 		BeanUtils.copyProperties(updatedUser, updatedUserDto);
 		return updatedUserDto;
 	}
@@ -155,15 +136,5 @@ public class UserServiceImpl implements UserService {
 		userRepository.delete(user);
 	}
 
-	@Override
-	public boolean updatePassword(Long userId, String currentPassword, String newPassword) {
-		UserEntity user = userRepository.findById(userId)
-				.orElseThrow(() -> new RuntimeException("User not found"));
-		if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-			throw new RuntimeException("Current password is incorrect");
-		}
-		user.setPassword(passwordEncoder.encode(newPassword));
-		userRepository.save(user);
-		return true;
-	}
+
 }

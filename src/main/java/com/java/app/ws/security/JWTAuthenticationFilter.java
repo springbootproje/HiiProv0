@@ -8,7 +8,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.java.app.ws.service.CustomUserDetailsService;
+import com.java.app.ws.service.Impl.CustomUserDetailsService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,6 +26,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
 
     @Override
+    //Méthode principale où la logique de filtrage est définie
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
