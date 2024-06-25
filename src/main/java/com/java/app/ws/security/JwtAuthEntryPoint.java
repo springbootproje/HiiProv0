@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 
 import java.io.IOException;
 
+// Indique à Spring que cette classe est un composant géré
 @Component
 public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
     @Override

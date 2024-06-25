@@ -1,4 +1,4 @@
-package com.java.app.ws;
+package com.java.app.ws.Exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.ErrorResponse;

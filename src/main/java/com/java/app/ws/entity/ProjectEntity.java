@@ -38,6 +38,7 @@ public class ProjectEntity implements Serializable  {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+
     private UserEntity creator;
 
     // Getters and Setters

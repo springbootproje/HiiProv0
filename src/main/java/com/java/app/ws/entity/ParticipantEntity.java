@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Optional;
 
 @Entity
-@Table(name = "projects_user")
+@Table(name = "paticipe")
 public class ParticipantEntity implements Serializable {
 
     @EmbeddedId

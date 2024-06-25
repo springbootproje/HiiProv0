@@ -10,7 +10,7 @@ public class TacheRequest {
 
 	public TacheRequest() {
 		super();
-		// TODO Auto-generated constructor stub
+
 	}
 	public TacheRequest(String statut, String description) {
 

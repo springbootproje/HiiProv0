@@ -20,10 +20,11 @@ public class UserEntity implements Serializable{
     private long id;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})//ici jai ajouter many to many avec avec had lobjet pareil f projectEntity
-    @JoinTable(name = "projects_user",
+    @JoinTable(name = "participe",
             joinColumns = @JoinColumn(name = "projects_id"),
             inverseJoinColumns = @JoinColumn(name ="user_id" )
     )
+    //hashset: array avce donee qui ce ne repete pas
     private Set<ProjectEntity> assignedProjects= new HashSet<>() ;
 
 

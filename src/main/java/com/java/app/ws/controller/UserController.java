@@ -1,8 +1,7 @@
 package com.java.app.ws.controller;
 
-import com.java.app.ws.ApiResponse;
+import com.java.app.ws.Response.ApiResponse;
 import com.java.app.ws.Response.AuthResponseDTO;
-import com.java.app.ws.Response.LoginResponse;
 import com.java.app.ws.dto.*;
 import com.java.app.ws.entity.UserEntity;
 import com.java.app.ws.repository.UserRepository;
@@ -45,6 +44,7 @@ public class UserController {
 
 
 	@PostMapping("/new")
+	//@TTP
 	public ResponseEntity<?> createUser(@RequestBody CreateUserDto createUserDto) {
 		UserDto newUserDto = userService.createUser(createUserDto);
 		Map<String, String> response = new HashMap<>();

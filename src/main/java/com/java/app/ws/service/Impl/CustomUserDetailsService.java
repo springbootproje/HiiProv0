@@ -1,4 +1,4 @@
-package com.java.app.ws.service;
+package com.java.app.ws.service.Impl;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
