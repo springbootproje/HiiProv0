@@ -20,7 +20,7 @@ public class UserEntity implements Serializable{
     private long id;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})//ici jai ajouter many to many avec avec had lobjet pareil f projectEntity
-    @JoinTable(name = "participe",
+    @JoinTable(name = "projetcs_user",
             joinColumns = @JoinColumn(name = "projects_id"),
             inverseJoinColumns = @JoinColumn(name ="user_id" )
     )

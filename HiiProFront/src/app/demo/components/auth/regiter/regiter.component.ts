@@ -79,6 +79,7 @@ export class RegiterComponent {
                     summary: 'Success',
                     detail: 'Registered successfully',
                 });
+                console.log('success');
                 this.router.navigate(['auth/login']);
             },
             error: (error) => {

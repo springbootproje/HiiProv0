@@ -14,7 +14,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -238,9 +240,15 @@ public class ProjectServiceImpl implements ProjectService {
 
 
 
-    public ProjectSummaryDto getProjectById(Long projectId) {
+    public ProjectSummaryDto getProjectById(Long projectId, Long userId) {
         ProjectEntity projectEntity = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NoSuchElementException("Project not found with ID: " + projectId));
+
+        // Check if the user is a member of the project
+        boolean isMember = participantRepository.existsByProjectAndUserId(projectEntity, userId);
+        if (!isMember) {
+            throw new AccessDeniedException("You are not a member of this project.");
+        }
 
         ProjectSummaryDto dto = new ProjectSummaryDto();
         dto.setId(projectEntity.getId());

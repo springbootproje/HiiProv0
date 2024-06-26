@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -40,15 +42,6 @@ public class ProjectController {
         this.projectServiceImpl = projectServiceImpl;
     }
 
-    // @PostMapping (path="/new")  //methos tested
-    // public ResponseEntity<?> createProject(@RequestBody ProjectCreationDto projectRequest) {
-    //     projectServiceImpl.createProject(
-    //             projectRequest.getTitle(),
-    //             projectRequest.getDescription(),
-    //             projectRequest.getCreatorUserId(), projectRequest.getMemberIds()
-    //     );
-    //     return ResponseEntity.status(HttpStatus.CREATED).body("Projet ajouté avec succès");
-    // }
 
     @PostMapping("/new")
     public ResponseEntity<?> createProject(@RequestBody ProjectCreationDto projectRequest,
@@ -97,9 +90,26 @@ public class ProjectController {
         }
     }
     @GetMapping("/{id}")
-    public ResponseEntity<ProjectSummaryDto> getProjectById(@PathVariable("id") Long projectId) {
-        ProjectSummaryDto project = projectServiceImpl.getProjectById(projectId);
-        return ResponseEntity.ok(project);
+    public ResponseEntity<ProjectSummaryDto> getProjectById(@PathVariable("id") Long projectId, @RequestHeader("Authorization") String token) {
+        try {
+            String jwt = token.substring(7); // Remove "Bearer " prefix
+            String username = jwtGenerator.getUsernameFromJWT(jwt); // Extract username from JWT
+
+            // Fetch user ID based on username
+            UserEntity user = userRepository.findByEmail(username)
+                    .orElseThrow(() -> new NoSuchElementException("User not found with username: " + username));
+            Long currentUserId = user.getId();
+
+            // Get the project summary if the user is a member
+            ProjectSummaryDto project = projectServiceImpl.getProjectById(projectId, currentUserId);
+            return ResponseEntity.ok(project);
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 
