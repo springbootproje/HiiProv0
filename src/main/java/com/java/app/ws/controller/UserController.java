@@ -44,17 +44,25 @@ public class UserController {
 
 
 	@PostMapping("/new")
-	//@TTP
 	public ResponseEntity<?> createUser(@RequestBody CreateUserDto createUserDto) {
-		UserDto newUserDto = userService.createUser(createUserDto);
-		Map<String, String> response = new HashMap<>();
-		response.put("message", "User created successfully");
-		response.put("id", Long.toString(newUserDto.getId()));
-		response.put("name", newUserDto.getFirstName() + " " + newUserDto.getLastName());
-		response.put("email", newUserDto.getEmail());
-		return ResponseEntity.ok(response);
+		try {
+			UserDto newUserDto = userService.createUser(createUserDto);
+			Map<String, String> response = new HashMap<>();
+			response.put("message", "User created successfully");
+			response.put("id", Long.toString(newUserDto.getId()));
+			response.put("name", newUserDto.getFirstName() + " " + newUserDto.getLastName());
+			response.put("email", newUserDto.getEmail());
+			return ResponseEntity.ok(response);
+		} catch (IllegalArgumentException e) {
+			Map<String, String> errorResponse = new HashMap<>();
+			errorResponse.put("error", "User already exists");
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse); // Use 409 Conflict status code
+		} catch (Exception e) {
+			Map<String, String> errorResponse = new HashMap<>();
+			errorResponse.put("error", "An unexpected error occurred");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+		}
 	}
-
 	@PostMapping("/login")
 
 

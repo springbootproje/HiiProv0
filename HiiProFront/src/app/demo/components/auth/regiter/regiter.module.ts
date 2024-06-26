@@ -19,6 +19,7 @@ import { InputTextModule } from 'primeng/inputtext';
         RegiterRoutingModule,
         CommonModule,
         InputTextModule,
+        ToastModule,
     ],
     declarations: [RegiterComponent],
     providers: [MessageService],

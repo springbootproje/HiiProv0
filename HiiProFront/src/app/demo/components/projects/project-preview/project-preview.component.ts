@@ -6,7 +6,7 @@ import { TaskService } from 'src/app/services/task.service';
 import { ProjectSummaryDto, TaskDto } from '../project.model';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MessageService } from 'primeng/api';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     selector: 'app-project-preview',
@@ -50,7 +50,8 @@ export class ProjectPreviewComponent implements OnInit {
         private projectService: ProjectService,
         private taskService: TaskService,
         private messageService: MessageService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private router: Router
     ) {
         this.taskEditForm = this.fb.group({
             title: [''],
@@ -66,16 +67,22 @@ export class ProjectPreviewComponent implements OnInit {
 
     loadProject(): void {
         const projectId = this.getProjectIdFromRoute();
-        this.projectService.getProjectById(projectId).subscribe((project) => {
-            this.project = project;
-            this.tasks = project.tasks || [];
+        this.projectService.getProjectById(projectId).subscribe({
+            next: (project) => {
+                this.project = project;
+                this.tasks = project.tasks || [];
 
-            this.users = project.members.map((member) => ({
-                label: `${member.firstName} ${member.lastName}`,
-                value: member.id,
-            }));
+                this.users = project.members.map((member) => ({
+                    label: `${member.firstName} ${member.lastName}`,
+                    value: member.id,
+                }));
 
-            this.organizeTasks();
+                this.organizeTasks();
+            },
+            error: (err) => {
+                this.messageService.add({severity: 'error', summary: 'Error', detail: 'Failed to load project'});
+                this.router.navigate(['/project']);
+            }
         });
     }
 

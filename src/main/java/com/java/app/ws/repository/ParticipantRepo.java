@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface ParticipantRepo extends JpaRepository<ParticipantEntity, Long> {
+    boolean existsByProjectAndUserId(ProjectEntity project, Long userId);
     boolean existsByUserAndProject( UserEntity user, ProjectEntity project);
     ParticipantEntity findByUserAndProject(UserEntity user, ProjectEntity project);
     List<ParticipantEntity> findByProject(ProjectEntity project);

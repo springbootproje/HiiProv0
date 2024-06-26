@@ -40,6 +40,7 @@ export class ChangePasswordComponent {
             validators: this.passwordMatchValidator
         });
     }
+    //start
     ngOnInit(): void {
         this.display = true; // Automatically show the dialog on component init
     }

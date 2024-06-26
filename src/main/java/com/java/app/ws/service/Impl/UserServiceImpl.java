@@ -38,23 +38,29 @@ public class UserServiceImpl implements UserService {
 	}
 
 //class mere service
-	@Override
-	public UserDto createUser(CreateUserDto createUserDto) {
-		UserEntity userEntity = new UserEntity();
-	
-		BeanUtils.copyProperties(createUserDto, userEntity);
-		userEntity.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
-		userEntity.setCreateDate(LocalDate.now());
-		UserEntity savedUser = userRepository.save(userEntity);
-
-	     UserDto newUserDto = new UserDto();
-		BeanUtils.copyProperties(savedUser, newUserDto);
-		//inclure l'ID, firstName, lastName, email, role
-		newUserDto.setId(savedUser.getId()); // Déjà inclus grâce à BeanUtils si ces champs existent dans UserEntity
-		// Pas besoin d'ajouter les autres champs manuellement si BeanUtils a déjà copié les propriétés et que les noms correspondent
-		return newUserDto;
+@Override
+public com.java.app.ws.dto.UserDto createUser(CreateUserDto createUserDto) {
+	// Check if the user already exists
+	Optional<UserEntity> existingUser = userRepository.findByEmail(createUserDto.getEmail());
+	if (existingUser.isPresent()) {
+		throw new IllegalArgumentException("User with email " + createUserDto.getEmail() + " already exists");
 	}
 
+	// Create new user entity and copy properties from DTO
+	UserEntity userEntity = new UserEntity();
+	BeanUtils.copyProperties(createUserDto, userEntity);
+	userEntity.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
+	userEntity.setCreateDate(LocalDate.now());
+
+	// Save new user entity to the repository
+	UserEntity savedUser = userRepository.save(userEntity);
+
+	// Create new UserDto and copy properties from saved user entity
+	com.java.app.ws.dto.UserDto newUserDto = new com.java.app.ws.dto.UserDto();
+	BeanUtils.copyProperties(savedUser, newUserDto);
+
+	return newUserDto;
+}
 
 	@Override
 	public void changePassword(String email, String currentPassword, String newPassword) {

@@ -31,11 +31,15 @@ export class AuthInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             catchError((error: HttpErrorResponse) => {
                 if (error.status === 401) {
-                    // Token is expired or invalid, log the user out and redirect to login page
-                    this.authService.logout();
-                    this.router.navigate(['/auth/login']);
+                    const isRegistrationRequest = req.url.includes('/register');
+
+                    if (!isRegistrationRequest) {
+                        // Token is expired or invalid, log the user out and redirect to login page
+                        this.authService.logout();
+                        this.router.navigate(['/auth/login']);
+                    }
                 }
-                return throwError(() => new Error(error.message));
+                return throwError(error);
             })
         );
     }
